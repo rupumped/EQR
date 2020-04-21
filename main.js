@@ -18,7 +18,7 @@ var person;
 if (window.location.href.includes('/?')) {
 	person = new Person(window.location.href);
 } else {
-	person = new Person('/?18074')
+	person = new Person('/?18073')
 }
 
 document.body.appendChild(getNumericInput('Weight (lbs): ', person.weight));
@@ -29,6 +29,6 @@ generateButton.setAttribute('type','button');
 generateButton.setAttribute('value','Generate Emergency QR Code');
 generateButton.onclick = function() { 
 	var qrcode = new QRCode("qrcode");
-	qrcode.makeCode('https://rupumped.github.io/EQR/index.html/?' + person.encode);
+	qrcode.makeCode('https://rupumped.github.io/EQR/index.html/?' + person.encode());
 };
 document.body.appendChild(generateButton);
