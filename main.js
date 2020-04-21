@@ -20,7 +20,7 @@ var person;
 if (window.location.href.includes('/?')) {
 	person = new Person(window.location.href);
 } else {
-	person = new Person('/?18073')
+	person = new Person('/?18075')
 }
 
 // Fill in input fields to HTML
@@ -46,6 +46,6 @@ generateButton.onclick = function() {
 	}
 	firstGen = false;
 	//qrcode.makeCode('file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode());
-	qrcode.makeCode('https://rupumped.github.io/EQR/index.html/?' + person.encode());
+	qrcode.makeCode('https://rupumped.github.io/EQR/?' + person.encode());
 };
 document.body.appendChild(generateButton);
