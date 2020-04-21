@@ -29,6 +29,6 @@ generateButton.setAttribute('type','button');
 generateButton.setAttribute('value','Generate Emergency QR Code');
 generateButton.onclick = function() { 
 	var qrcode = new QRCode("qrcode");
-	qrcode.makeCode('https://rupumped.github.io/rupumped/EQR/index.html/?' + person.encode);
+	qrcode.makeCode('https://rupumped.github.io/EQR/index.html/?' + person.encode);
 };
 document.body.appendChild(generateButton);
