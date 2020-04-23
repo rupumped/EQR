@@ -309,9 +309,9 @@ function getInputInCell(value) {
 }
 
 function decodeStr(str) {
-	return str.replace('_',' ');
+	return str.split('_').join(' ');
 }
 
 function encodeStr(str) {
-	return str.trim().replace(' ','_');
+	return str.trim().split(' ').join('_');
 }
