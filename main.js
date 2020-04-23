@@ -55,6 +55,7 @@ function updateForm() {
 		for (let i=0; i<allergies.length; i++) {
 			allergies[i] = decodeStr(allergies[i]);
 		}
+		if (allergies.length==1 && allergies[0]=='') allergies = [];
 		person.allergies = allergies;
 	};
 	appendFormElement(allergyEl);
@@ -66,6 +67,7 @@ function updateForm() {
 			addictions[i] = decodeStr(addictions[i]);
 		}
 		person.addictions = addictions;
+		if (addictions.length==1 && addictions[0]=='') addictions = [];
 	};
 	appendFormElement(addictionEl);
 
@@ -116,9 +118,13 @@ generateButton.onclick = function() {
 	} else {
 		qrcode.clear();
 	}
-	firstGen = false;
 
-	console.log('https://rupumped.github.io/EQR/?' + person.encode());
+	console.log('file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode());
 	qrcode.makeCode('https://rupumped.github.io/EQR/?' + person.encode());
+	if (firstGen) document.body.appendChild(document.createElement('BR'));
+
+	firstGen = false;
 };
 document.body.appendChild(generateButton);
+document.body.appendChild(document.createElement('BR'));
+document.body.appendChild(document.createElement('BR'));

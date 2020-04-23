@@ -19,16 +19,16 @@ function Person(update, url) {
 
 	var allergies = data[i++].match(/([A-Za-z0-9_]+)\&/g);
 	this.allergies = [];
-	allergies.forEach(element => this.allergies.push(element.substring(0,element.length-1)));
+	if (allergies) allergies.forEach(element => this.allergies.push(element.substring(0,element.length-1)));
 
 	var addictions = data[i++].match(/([A-Za-z0-9_]+)\&/g);
 	this.addictions = [];
-	addictions.forEach(element => this.addictions.push(element.substring(0,element.length-1)));
+	if (addictions) addictions.forEach(element => this.addictions.push(element.substring(0,element.length-1)));
 
 	var medications = data[i++].match(/([A-Za-z0-9_]+\&[A-Za-z0-9_]+\&[A-Za-z0-9_]+\&[A-Za-z0-9_]+)\&/g)
 	//                                  Name         & Dosage       & Frequency    & Reason
 	this.medications = [];
-	medications.forEach(element => {
+	if (medications) medications.forEach(element => {
 		var medData = element.match(/([A-Za-z0-9_]+)\&/g);
 		this.medications.push({
 			name: medData[0].substring(0,medData[0].length-1),
@@ -41,7 +41,7 @@ function Person(update, url) {
 	var conditions = data[i++].match(/([A-Za-z0-9_]+\&[A-Za-z0-9_]+\&[A-Za-z0-9_]+)\&/g)
 	//                                 Name         & Effect       & Relevance
 	this.conditions = [];
-	conditions.forEach(element => {
+	if (conditions) conditions.forEach(element => {
 		var medData = element.match(/([A-Za-z0-9_]+)\&/g);
 		this.conditions.push({
 			name: medData[0].substring(0,medData[0].length-1),
@@ -53,14 +53,14 @@ function Person(update, url) {
 	var contacts = data[i++].match(/([A-Za-z]+[0-9]+)\&/g);
 	//                               Name     Number
 	this.contacts = [];
-	contacts.forEach(element => {
+	if (contacts) contacts.forEach(element => {
 		this.contacts.push({
 			name: element.match(/[A-Za-z]+/g)[0],
 			number: element.match(/[0-9]+/g)[0]
 		});
 	});
 	
-	console.log(this.encode());
+	// console.log(this.encode());
 }
 
 Person.prototype.encode = function() {
