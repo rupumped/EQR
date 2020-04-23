@@ -125,8 +125,6 @@ generateButton.onclick = function() {
 	qrcode.makeCode(code);
 	if (firstGen) {
 		document.body.appendChild(document.createElement('BR'));
-		document.body.appendChild(document.createElement('BR'));
-		document.body.appendChild(document.createTextNode('Use your smartphone to take a picture!'));
 	}
 
 	firstGen = false;
