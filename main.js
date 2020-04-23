@@ -130,4 +130,4 @@ generateButton.onclick = function() {
 document.body.appendChild(generateButton);
 document.body.appendChild(document.createElement('BR'));
 document.body.appendChild(document.createElement('BR'));
-document.body.appendChild(document.creatTextNode(' '));
+document.body.appendChild(document.createTextNode(' '));
