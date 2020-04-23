@@ -5,16 +5,16 @@ const REGEX = {
 	WEIGHT: '\\d{4}',
 	TEXT: '[\\w\\.\\-]+'
 }
-const NAME_ERROR_MSG = ' must only contain English letters, spaces, periods, and hyphens. At this time, we cannot encode other special characters or numbers.';
-const TEXT_ERROR_MSG = ' must only contain English letters, numbers, spaces, periods, and hyphens. At this time, we cannot encode other special characters.';
+const NAME_ERROR_MSG = ' must only contain English letters, spaces, periods, and hyphens. It cannot be left blank. At this time, we cannot encode other special characters or numbers.';
+const TEXT_ERROR_MSG = ' must only contain English letters, numbers, spaces, periods, and hyphens. It cannot be left blank. At this time, we cannot encode other special characters.';
 
 function Person(update, url) {
 	this.update = update;
 
 	url = url.substring(url.indexOf('/?')+2);
 	// TODO: Add support for all unicode letters \p{L}. Currently, Firefox does not support this.
-	var re = new RegExp('('+REGEX.NAME+')' + '(\\d{4})(\\d{2})(\\d{2})' + '('+REGEX.BLOOD+')' + '('+REGEX.HEIGHT+')' + '('+REGEX.WEIGHT+')' + '((?:'+REGEX.TEXT+'\\&)*)' + '=((?:'+REGEX.TEXT+'\\&)*)' + '=((?:(?:'+REGEX.TEXT+'\\&){4})*)' + '=((?:(?:'+REGEX.TEXT+'\\&){3})*)' + '=((?:'+REGEX.NAME+'\\d+\\&)*)=');
-	//                   Name                 DOB                                Blood Type            Height                 Weight                 Allergies                    = Addictions                  = Medications                        = Medical Conditions                 = Emergency Contacts           =
+	var re = new RegExp('('+REGEX.NAME+')' + '(\\d{4})(\\d{2})(\\d{2})' + '('+REGEX.BLOOD+')' + '('+REGEX.HEIGHT+')' + '('+REGEX.WEIGHT+')' + '((?:'+REGEX.TEXT+'\\&)*)' + '=((?:'+REGEX.TEXT+'\\&)*)' + '=((?:(?:'+REGEX.TEXT+'\\&){4})*)' + '=((?:(?:'+REGEX.TEXT+'\\&){3})*)' + '=((?:'+REGEX.NAME+'\\d+'+REGEX.NAME+'\\&)*)=');
+	//                   Name                 DOB                          Blood Type            Height                 Weight                 Allergies                    = Addictions                  = Medications                        = Medical Conditions                 = Emergency Contacts                       =
 	var data = url.match(re);
 	var i=1;
 	this.name = data[i++];
@@ -24,7 +24,9 @@ function Person(update, url) {
 		da: data[i++]
 	};
 	this.blood = data[i++];
-	this.height = parseInt(data[i++]);
+
+	var heightStr = data[i++];
+	this.height = { ft: parseInt(heightStr.substring(0,1)), in: parseInt(heightStr.substring(1,3)) };
 	this.weight = parseInt(data[i++]);
 
 	var allergies = data[i++].match(new RegExp('('+REGEX.TEXT+')\\&', 'g'));
@@ -58,18 +60,20 @@ function Person(update, url) {
 		});
 	});
 
-	var contacts = data[i++].match(new RegExp(REGEX.NAME+'\\d+\\&', 'g'));
+	var contacts = data[i++].match(new RegExp(REGEX.NAME+'\\d+'+REGEX.NAME+'\\&', 'g'));
 	this.contacts = [];
 	if (contacts) contacts.forEach(element => {
+		var nameAndRelation = element.match(new RegExp(REGEX.NAME, 'g'));
 		this.contacts.push({
-			name: element.match(new RegExp(REGEX.NAME, 'g'))[0],
-			number: element.match(/\d+/g)[0]
+			name: nameAndRelation[0],
+			number: element.match(/\d+/g)[0],
+			relation: nameAndRelation[1]
 		});
 	});
 }
 
 Person.prototype.encode = function() {
-	var str = `${this.name}${this.DOB.yr}${this.DOB.mo}${this.DOB.da}${this.blood}${pad(this.height,3)}${pad(this.weight,4)}`;
+	var str = `${this.name}${this.DOB.yr}${this.DOB.mo}${this.DOB.da}${this.blood}${this.height.ft}${pad(this.height.in,2)}${pad(this.weight,4)}`;
 	this.allergies.forEach(allergen => str+=allergen+'&');
 	str+='=';
 	this.addictions.forEach(addiction => str+=addiction+'&');
@@ -78,7 +82,7 @@ Person.prototype.encode = function() {
 	str+='=';
 	this.conditions.forEach(med => str+=`${med.name}&${med.effect}&${med.relevance}&`);
 	str+='=';
-	this.contacts.forEach(med => str+=`${med.name}${med.number}&`);
+	this.contacts.forEach(med => str+=`${med.name}${med.number}${med.relation}&`);
 	str+='=';
 	return str;
 }
@@ -140,25 +144,29 @@ Person.prototype.getMedsTable = function() {
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].name)));
 		iic[i][0].input.onchange = () => this.medications[i].name = encodeStr(iic[i][0].input.value);
+		iic[i][0].input.required = true;
 		tr.appendChild(iic[i][0].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].dose)));
 		iic[i][1].input.onchange = () => this.medications[i].dose = encodeStr(iic[i][1].input.value);
+		iic[i][1].input.required = true;
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].freq)));
 		iic[i][2].input.onchange = () => this.medications[i].freq = encodeStr(iic[i][2].input.value);
+		iic[i][2].input.required = true;
 		tr.appendChild(iic[i][2].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].reason)));
 		iic[i][3].input.onchange = () => this.medications[i].reason = encodeStr(iic[i][3].input.value);
+		iic[i][3].input.required = true;
 		tr.appendChild(iic[i][3].cell);
 
 		medsTbody.appendChild(tr);
 	}
 
 	var lastRow = document.createElement('TR');
-	for (let i=0; i<medsTbody.rows[0].cells.length-1; i++) lastRow.appendChild(document.createElement('TD'));
+	lastRow.appendChild(document.createElement('TD'));
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
 	addButton.setAttribute('type','button');
@@ -169,6 +177,7 @@ Person.prototype.getMedsTable = function() {
 	}
 	lastCell.appendChild(addButton);
 	lastRow.appendChild(lastCell);
+	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
@@ -187,7 +196,7 @@ Person.prototype.getConditionsTable = function() {
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
 	var td_0_2 = document.createElement('TD');
-	td_0_2.appendChild(document.createTextNode('What does it do to the body?'));
+	td_0_2.appendChild(document.createTextNode('Symptoms'));
 	headerTR.appendChild(td_0_2);
 	var td_0_3 = document.createElement('TD');
 	td_0_3.appendChild(document.createTextNode('Relevance during emergency'));
@@ -212,21 +221,24 @@ Person.prototype.getConditionsTable = function() {
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].name)));
 		iic[i][0].input.onchange = () => this.conditions[i].name = encodeStr(iic[i][0].input.value);
+		iic[i][0].input.required = true;
 		tr.appendChild(iic[i][0].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].effect)));
 		iic[i][1].input.onchange = () => this.conditions[i].effect = encodeStr(iic[i][1].input.value);
+		iic[i][1].input.required = true;
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].relevance)));
 		iic[i][2].input.onchange = () => this.conditions[i].relevance = encodeStr(iic[i][2].input.value);
+		iic[i][2].input.required = true;
 		tr.appendChild(iic[i][2].cell);
 
 		medsTbody.appendChild(tr);
 	}
 
 	var lastRow = document.createElement('TR');
-	for (let i=0; i<medsTbody.rows[0].cells.length-1; i++) lastRow.appendChild(document.createElement('TD'));
+	lastRow.appendChild(document.createElement('TD'));
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
 	addButton.setAttribute('type','button');
@@ -237,6 +249,7 @@ Person.prototype.getConditionsTable = function() {
 	}
 	lastCell.appendChild(addButton);
 	lastRow.appendChild(lastCell);
+	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
@@ -257,6 +270,9 @@ Person.prototype.getContactsTable = function() {
 	var td_0_2 = document.createElement('TD');
 	td_0_2.appendChild(document.createTextNode('Phone Number'));
 	headerTR.appendChild(td_0_2);
+	var td_0_3 = document.createElement('TD');
+	td_0_3.appendChild(document.createTextNode('Relationship'));
+	headerTR.appendChild(td_0_3);
 	medsTbody.appendChild(headerTR);
 
 	var iic = new Array(this.contacts.length);
@@ -277,6 +293,7 @@ Person.prototype.getContactsTable = function() {
 
 		iic[i].push(getInputInCell(decodeStr(this.contacts[i].name)));
 		iic[i][0].input.onchange = () => this.contacts[i].name = encodeStr(iic[i][0].input.value);
+		iic[i][0].input.required = true;
 		tr.appendChild(iic[i][0].cell);
 
 		var thisNumber = this.contacts[i].number;
@@ -286,23 +303,30 @@ Person.prototype.getContactsTable = function() {
 		iic[i].push(getInputInCell(thisNumber));
 		iic[i][1].input.pattern='[\\d\\-\\(\\) ]+'
 		iic[i][1].input.onchange = () => this.contacts[i].number = iic[i][1].input.value.match(/\d/g).join('');
+		iic[i][1].input.required = true;
 		tr.appendChild(iic[i][1].cell);
+
+		iic[i].push(getInputInCell(decodeStr(this.contacts[i].relation)));
+		iic[i][2].input.onchange = () => this.contacts[i].relation = encodeStr(iic[i][2].input.value);
+		iic[i][2].input.required = true;
+		tr.appendChild(iic[i][2].cell);
 
 		medsTbody.appendChild(tr);
 	}
 
 	var lastRow = document.createElement('TR');
-	for (let i=0; i<medsTbody.rows[0].cells.length-1; i++) lastRow.appendChild(document.createElement('TD'));
+	lastRow.appendChild(document.createElement('TD'));
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
 	addButton.setAttribute('type','button');
 	addButton.setAttribute('value','Add Contact');
 	addButton.onclick = () => {
-		thisPerson.contacts.push({name: 'Name', number: '4805551234'});
+		thisPerson.contacts.push({name: 'Name', number: '4805551234', relation: 'friend'});
 		thisPerson.update();
 	}
 	lastCell.appendChild(addButton);
 	lastRow.appendChild(lastCell);
+	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
@@ -329,9 +353,9 @@ Person.prototype.validate = function() {
 	}
 
 	// Height
-	if (this.height<0 || this.height>999 || !Number.isInteger(this.height)) {
+	if (this.height.ft<0 || this.height.ft>9 || !Number.isInteger(this.height.ft) || this.height.in<0 || this.height.in>11 || !Number.isInteger(this.height.in)) {
 		result = false;
-		errors.push(`Height "${this.height}" must a whole number between 0 and 999.`);
+		errors.push(`Height must be a valid height between 0'0" and 9'11".`);
 	}
 
 	// Weight
@@ -387,17 +411,17 @@ Person.prototype.validate = function() {
 		aMatch = med.name.match(REGEX.TEXT);
 		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.name) {
 			result = false;
-			errors.push(`Condition #${i+1} name "${decodeStr(med.name)}"${TEXT_ERROR_MSG}`);
+			errors.push(`Medical Condition #${i+1} name "${decodeStr(med.name)}"${TEXT_ERROR_MSG}`);
 		}
 		aMatch = med.effect.match(REGEX.TEXT);
 		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.effect) {
 			result = false;
-			errors.push(`Condition #${i+1} effect "${decodeStr(med.effect)}"${TEXT_ERROR_MSG}`);
+			errors.push(`Medical Condition #${i+1} effect "${decodeStr(med.effect)}"${TEXT_ERROR_MSG}`);
 		}
 		aMatch = med.relevance.match(REGEX.TEXT);
 		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.relevance) {
 			result = false;
-			errors.push(`Condition #${i+1} relevance "${decodeStr(med.relevance)}"${TEXT_ERROR_MSG}`);
+			errors.push(`Medical Condition #${i+1} relevance "${decodeStr(med.relevance)}"${TEXT_ERROR_MSG}`);
 		}
 	});
 
@@ -412,6 +436,11 @@ Person.prototype.validate = function() {
 		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.number) {
 			result = false;
 			errors.push(`Contact #${i+1} phone number "${med.number}" must only include numbers, hyphens, parentheses, and spaces. It cannot be left blank.`);
+		}
+		aMatch = med.relation.match(REGEX.NAME);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.relation) {
+			result = false;
+			errors.push(`Contact #${i+1} relationship "${decodeStr(med.relation)}"${NAME_ERROR_MSG}`);
 		}
 	});
 
