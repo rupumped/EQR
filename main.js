@@ -99,7 +99,7 @@ var person;
 if (window.location.href.includes('/?')) {
 	person = new Person(updateForm, window.location.href);
 } else {
-	person = new Person(updateForm, '/?Taylor_Doe19930301A+0730180bees&peanuts&frogs&=meth&alcohol&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&kidneys&idk&heart_probs&badness&idkagain&=ann6025551234&mom4805551234&')
+	person = new Person(updateForm, '/?Taylor_Doe19940301A+0730180bees&peanuts&frogs&=meth&alcohol&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&kidneys&idk&heart_probs&badness&idkagain&=ann6025551234&mom4805551234&')
 }
 
 updateForm();
@@ -119,8 +119,10 @@ generateButton.onclick = function() {
 		qrcode.clear();
 	}
 
-	console.log('file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode());
-	qrcode.makeCode('https://rupumped.github.io/EQR/?' + person.encode());
+	//var code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode();
+	var code = 'https://rupumped.github.io/EQR/?' + person.encode();
+	console.log(code);
+	qrcode.makeCode(code);
 	if (firstGen) document.body.appendChild(document.createElement('BR'));
 
 	firstGen = false;
@@ -128,3 +130,4 @@ generateButton.onclick = function() {
 document.body.appendChild(generateButton);
 document.body.appendChild(document.createElement('BR'));
 document.body.appendChild(document.createElement('BR'));
+document.body.appendChild(document.creatTextNode(' '));
