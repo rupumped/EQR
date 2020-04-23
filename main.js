@@ -99,7 +99,7 @@ var person;
 if (window.location.href.includes('/?')) {
 	person = new Person(updateForm, window.location.href);
 } else {
-	person = new Person(updateForm, '/?Taylor_Doe19930301A+0730180bees&peanuts&frogs&=meth&alcohol&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&kidneys&idk&heart_probs&badness&idkagain&=ann6025551234&mom4805551234&')
+	person = new Person(updateForm, '/?Taylor_Doe19940301A+0730180bees&peanuts&frogs&=meth&alcohol&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&kidneys&idk&heart_probs&badness&idkagain&=ann6025551234&mom4805551234&')
 }
 
 updateForm();
