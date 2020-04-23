@@ -1,10 +1,18 @@
+const REGEX = {
+	NAME: '[A-Za-z_]+',
+	BLOOD: '(?:A|B|AB|O)[+-]',
+	HEIGHT: '[0-9]{3}',
+	WEIGHT: '[0-9]{4}',
+	TEXT: '[A-Za-z0-9_]+'
+}
+
 function Person(update, url) {
 	this.update = update;
 
 	url = url.substring(url.indexOf('/?')+2);
 	// TODO: Add support for all unicode letters \p{L}. Currently, Firefox does not support this.
-	var re = /([A-Za-z_]+)([0-9]{4})([0-9]{2})([0-9]{2})((?:A|B|AB|O)[+-])([0-9]{3})([0-9]{4})((?:[A-Za-z0-9_]+\&)*)=((?:[A-Za-z0-9_]+\&)*)=((?:[A-Za-z0-9_]+\&[A-Za-z0-9_]+\&[A-Za-z0-9_]+\&[A-Za-z0-9_]+\&)*)=((?:[A-Za-z0-9_]+\&[A-Za-z0-9_]+\&[A-Za-z0-9_]+\&)*)=((?:[A-Za-z_]+[0-9]+\&)*)/
-	//         Name        DOB                           Blood Type        Height    Weight    Allergies            = Addictions           = Medications                                                       = Medical Conditions                                 = Emergency Contacts
+	var re = new RegExp('('+REGEX.NAME+')' + '([0-9]{4})([0-9]{2})([0-9]{2})' + '('+REGEX.BLOOD+')' + '('+REGEX.HEIGHT+')' + '('+REGEX.WEIGHT+')' + '((?:'+REGEX.TEXT+'\\&)*)' + '=((?:'+REGEX.TEXT+'\\&)*)' + '=((?:(?:'+REGEX.TEXT+'\\&){4})*)' + '=((?:(?:'+REGEX.TEXT+'\\&){3})*)' + '=((?:'+REGEX.NAME+'[0-9]+\\&)*)=');
+	//                   Name                 DOB                                Blood Type            Height                 Weight                 Allergies                    = Addictions                  = Medications                        = Medical Conditions                 = Emergency Contacts           =
 	var data = url.match(re);
 	var i=1;
 	this.name = data[i++];
@@ -17,7 +25,7 @@ function Person(update, url) {
 	this.height = parseInt(data[i++]);
 	this.weight = parseInt(data[i++]);
 
-	var allergies = data[i++].match(/([A-Za-z0-9_]+)\&/g);
+	var allergies = data[i++].match(new RegExp('('+REGEX.TEXT+')\\&', 'g'));
 	this.allergies = [];
 	if (allergies) allergies.forEach(element => this.allergies.push(element.substring(0,element.length-1)));
 
@@ -74,6 +82,7 @@ Person.prototype.encode = function() {
 	this.conditions.forEach(med => str+=`${med.name}&${med.effect}&${med.relevance}&`);
 	str+='=';
 	this.contacts.forEach(med => str+=`${med.name}${med.number}&`);
+	str+='=';
 	return str;
 }
 
@@ -297,6 +306,132 @@ Person.prototype.getContactsTable = function() {
 
 	medsTable.appendChild(medsTbody);
 	return medsTable;
+}
+
+Person.prototype.validate = function() {
+	var result = true;
+	var errors = [];
+	var aMatch = [];
+
+	// Name
+	aMatch = this.name.match(new RegExp(REGEX.NAME));
+	if (!aMatch || aMatch.length!==1 || aMatch[0]!==this.name) {
+		result = false;
+		errors.push(`Full name "${decodeStr(this.name)}" must only contain English letters and spaces. At this time, we cannot encode special characters.`);
+	}
+
+	// Blood Type
+	aMatch = this.blood.match(new RegExp(REGEX.BLOOD));
+	if (!aMatch || aMatch.length!==1 || aMatch[0]!==this.blood) {
+		result = false;
+		errors.push(`Blood type "${this.blood}" must begin with O, A, B, or AB; end with + or -; and contain no other characters.`);
+	}
+
+	// Height
+	if (this.height<0 || this.height>999 || !Number.isInteger(this.height)) {
+		result = false;
+		errors.push(`Height "${this.height}" must a whole number between 0 and 999.`);
+	}
+
+	// Weight
+	if (this.weight<0 || this.weight>9999 || !Number.isInteger(this.weight)) {
+		result = false;
+		errors.push(`Weight "${this.weight}" must a whole number between 0 and 9999.`);
+	}
+
+	// Allergies
+	this.allergies.forEach(allergen => {
+		aMatch = allergen.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==allergen) {
+			result = false;
+			errors.push(`Allergen "${decodeStr(allergen)}" must only contain English letters, numbers, and spaces. At this time, we cannot encode special characters.`);
+		}
+	});
+
+	// Addictions
+	this.addictions.forEach(addiction => {
+		aMatch = addiction.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==addiction) {
+			result = false;
+			errors.push(`Addiction "${decodeStr(addiction)}" must only contain English letters, numbers, and spaces. At this time, we cannot encode special characters.`);
+		}
+	});
+
+	// Medications
+	this.medications.forEach((med,i) => {
+		aMatch = med.name.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.name) {
+			result = false;
+			errors.push(`Medication #${i+1} name "${decodeStr(med.name)}" must only contain English letters, numbers, and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+		aMatch = med.dose.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.dose) {
+			result = false;
+			errors.push(`Medication #${i+1} dosage "${decodeStr(med.dose)}" must only contain English letters, numbers, and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+		aMatch = med.freq.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.freq) {
+			result = false;
+			errors.push(`Medication #${i+1} frequency "${decodeStr(med.freq)}" must only contain English letters, numbers, and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+		aMatch = med.reason.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.reason) {
+			result = false;
+			errors.push(`Medication #${i+1} reason "${decodeStr(med.reason)}" must only contain English letters, numbers, and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+	});
+
+	// Conditions
+	this.conditions.forEach((med,i) => {
+		aMatch = med.name.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.name) {
+			result = false;
+			errors.push(`Condition #${i+1} name "${decodeStr(med.name)}" must only contain English letters, numbers, and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+		aMatch = med.effect.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.effect) {
+			result = false;
+			errors.push(`Condition #${i+1} effect "${decodeStr(med.effect)}" must only contain English letters, numbers, and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+		aMatch = med.relevance.match(REGEX.TEXT);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.relevance) {
+			result = false;
+			errors.push(`Condition #${i+1} relevance "${decodeStr(med.relevance)}" must only contain English letters, numbers, and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+	});
+
+	// Contacts
+	this.contacts.forEach((med,i) => {
+		aMatch = med.name.match(REGEX.NAME);
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.name) {
+			result = false;
+			errors.push(`Contact #${i+1} name "${decodeStr(med.name)}" must only contain English letters and spaces. It cannot be left blank. At this time, we cannot encode special characters.`);
+		}
+		aMatch = med.number.match('[0-9]+');
+		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.number) {
+			result = false;
+			errors.push(`Contact #${i+1} phone number "${med.number}" must be formatted ###-###-####. It cannot be left blank.`);
+		}
+	});
+
+	// Final Check
+	if (result) {
+		try {
+			var encoding = '/?' + person.encode();
+			var newPerson = new Person(this.update, encoding);
+			var newEncoding = '/?' + newPerson.encode();
+			if (encoding !== newEncoding) {
+				result = false;
+				errors.push(`Unknown error. Encoding can't be replicated.\nEncoding 1: "${encoding}"\nEncoding 2: "${newEncoding}`);
+			}
+		} catch (error) {
+			result = false;
+			errors.push(`Unknown error. Error message: ${error}`);
+			console.error(error);
+		}
+	}
+
+	return {result: result, errors: errors};
 }
 
 function getInputInCell(value) {

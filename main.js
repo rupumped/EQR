@@ -51,7 +51,7 @@ function updateForm() {
 
 	var allergyEl = createFormElement('allergies', 'Allergies (comma-separated):', 'allergies', person.allergies.join());
 	allergyEl.input.onchange = () => {
-		var allergies = allergyEl.input.value.split(',');
+		var allergies = myTrim(allergyEl.input.value,'[\\s,]').split(',');
 		for (let i=0; i<allergies.length; i++) {
 			allergies[i] = decodeStr(allergies[i]);
 		}
@@ -62,7 +62,7 @@ function updateForm() {
 
 	var addictionEl = createFormElement('addictions', 'Addictions (comma-separated):', 'addictions', person.addictions.join());
 	addictionEl.input.onchange = () => {
-		var addictions = addictionEl.input.value.split(',');
+		var addictions = myTrim(addictionEl.input.value,'[\\s,]').split(',');
 		for (let i=0; i<addictions.length; i++) {
 			addictions[i] = decodeStr(addictions[i]);
 		}
@@ -79,7 +79,7 @@ function updateForm() {
 	form.appendChild(medsTable);
 
 	var condsLabel = document.createElement('LABEL');
-	condsLabel.innerHTML = 'Conditions:';
+	condsLabel.innerHTML = 'Medical Conditions:';
 	form.appendChild(condsLabel);
 	form.appendChild(document.createElement('BR'));
 	var condsTable = person.getConditionsTable();
@@ -99,38 +99,48 @@ var person;
 if (window.location.href.includes('/?')) {
 	person = new Person(updateForm, window.location.href);
 } else {
-	person = new Person(updateForm, '/?Taylor_Doe19940301A+0730180bees&peanuts&frogs&=meth&alcohol&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&kidneys&idk&heart_probs&badness&idkagain&=ann6025551234&mom4805551234&')
+	person = new Person(updateForm, '/?Taylor_Doe19830301A+0730180amoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234&John4805551234&=')
 }
-///?Ann19940610O-0780120mosquito,lamb,jelly&=nick&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&eye&badness&heart_probs&hello&idkagain&=me6025551234&
-///?Taylor_Doe19940301A+0730180bees&peanuts&frogs&=meth&alcohol&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&kidneys&idk&heart_probs&badness&idkagain&=ann6025551234&mom4805551234&
 
 updateForm();
 document.body.appendChild(form);
 
+// Set up QR code
+var qrcode = new QRCode('qrcode');
+var qrDiv = document.getElementById('qrcode');
+
 // Add generate button to HTML
+var errorDiv = document.createElement('DIV');
 var generateButton = document.createElement('INPUT');
-var qrcode;
-var firstGen = true;
 generateButton.setAttribute('type','button');
 generateButton.setAttribute('value','Generate Emergency QR Code');
 generateButton.onclick = function() {
-	// Generate QR Code
-	if (firstGen) {
-		qrcode = new QRCode("qrcode");
+	errorDiv.innerHTML='';
+	qrcode.clear();
+	var valResult = person.validate();
+	if (valResult.result) {
+		qrDiv.style.display = 'initial';
+		errorDiv.innerHTML='';
+		//var code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode();
+		var code = 'https://rupumped.github.io/EQR/?' + person.encode();
+		console.log(code);
+		qrcode.makeCode(code);
 	} else {
-		qrcode.clear();
+		qrDiv.style.display = 'none';
+		errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
+		errorDiv.appendChild(document.createElement('BR'));
+		errorDiv.appendChild(document.createElement('BR'));
+		valResult.errors.forEach(msg => {
+			errorDiv.appendChild(document.createTextNode(msg));
+			errorDiv.appendChild(document.createElement('BR'));
+		});
+		errorDiv.appendChild(document.createElement('BR'));
+		errorDiv.appendChild(document.createTextNode('Please fix the above errors and try again.'))
 	}
-
-	//var code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode();
-	var code = 'https://rupumped.github.io/EQR/?' + person.encode();
-	console.log(code);
-	qrcode.makeCode(code);
-	if (firstGen) {
-		document.body.appendChild(document.createElement('BR'));
-	}
-
-	firstGen = false;
 };
 document.body.appendChild(generateButton);
 document.body.appendChild(document.createElement('BR'));
 document.body.appendChild(document.createElement('BR'));
+document.body.appendChild(errorDiv);
+document.body.removeChild(qrDiv);
+document.body.appendChild(qrDiv);
