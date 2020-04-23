@@ -1,31 +1,107 @@
-function getNumericInput(label,prompt,id) {
-	var label = document.createTextNode(label);
-
+function createFormElement(id,labelText,type,value,noteText='') {
+	var label = document.createElement('LABEL');
+	label.setAttribute('for', id);
+	label.innerHTML = labelText;
 	var input = document.createElement('INPUT');
-	input.setAttribute('type','number');
-	input.setAttribute('value',prompt);
-	input.setAttribute('id',id);
+	input.setAttribute('type', type);
+	input.setAttribute('id', id);
+	input.setAttribute('value', value);
+	var note = document.createElement('SMALL');
+	note.innerHTML = noteText;
+	return {label: label, input: input, note: note};
+}
 
-	var span = document.createElement('SPAN');
-	span.appendChild(label);
-	span.appendChild(input);
+function appendFormElement(element) {
+	form.appendChild(element.label);
+	form.appendChild(element.input);
+	form.appendChild(element.note);
+	form.appendChild(document.createElement('BR'));
+	form.appendChild(document.createElement('BR'));
+}
 
-	var element = document.createElement('DIV');
-	element.appendChild(span);
-	return element;
+// Fill in input fields to HTML
+var form = document.createElement('FORM');
+function updateForm() {
+	form.innerHTML = '';
+
+	var nameEl = createFormElement('name', 'Full Name:', 'text', decodeStr(person.name));
+	nameEl.input.onchange = () => person.name = encodeStr(nameEl.input.value);
+	appendFormElement(nameEl);
+
+	var dobEl = createFormElement('dob', 'Date of Birth:', 'date', `${person.DOB.yr}-${person.DOB.mo}-${person.DOB.da}`);
+	dobEl.input.onchange = () => person.DOB = {yr: dobEl.input.value.split('-')[0], mo: dobEl.input.value.split('-')[1], da: dobEl.input.value.split('-')[2]};
+	appendFormElement(dobEl);
+
+	var bloodEl = createFormElement('blood', 'Blood Type:', 'text', person.blood);
+	bloodEl.input.onchange = () => person.blood = bloodEl.input.value;
+	bloodEl.input.setAttribute('pattern','(A|B|AB|O)[+-]')
+	appendFormElement(bloodEl);
+
+	var heightEl = createFormElement('height', 'Height (inches):', 'number', person.height);
+	heightEl.input.onchange = () => person.height = parseInt(heightEl.input.value);
+	heightEl.input.setAttribute('min',0);
+	heightEl.input.setAttribute('max',999);
+	appendFormElement(heightEl);
+
+	var weightEl = createFormElement('weight', 'Weight (lbs):', 'number', person.weight);
+	weightEl.input.onchange = () => person.weight = parseInt(weightEl.input.value);
+	weightEl.input.setAttribute('min',0);
+	weightEl.input.setAttribute('max',9999);
+	appendFormElement(weightEl);
+
+	var allergyEl = createFormElement('allergies', 'Allergies (comma-separated):', 'allergies', person.allergies.join());
+	allergyEl.input.onchange = () => {
+		var allergies = allergyEl.input.value.split();
+		for (let i=0; i<allergies.length; i++) {
+			allergies[i] = decodeStr(allergies[i]);
+		}
+		person.allergies = allergies;
+	};
+	appendFormElement(allergyEl);
+
+	var addictionEl = createFormElement('addictions', 'Addictions (comma-separated):', 'addictions', person.addictions.join());
+	addictionEl.input.onchange = () => {
+		var addictions = addictionEl.input.value.split();
+		for (let i=0; i<addictions.length; i++) {
+			addictions[i] = decodeStr(addictions[i]);
+		}
+		person.addictions = addictions;
+	};
+	appendFormElement(addictionEl);
+
+	var medsLabel = document.createElement('LABEL');
+	medsLabel.innerHTML = 'Medications:';
+	form.appendChild(medsLabel);
+	form.appendChild(document.createElement('BR'));
+	var medsTable = person.getMedsTable();
+	form.appendChild(medsTable);
+
+	var condsLabel = document.createElement('LABEL');
+	condsLabel.innerHTML = 'Conditions:';
+	form.appendChild(condsLabel);
+	form.appendChild(document.createElement('BR'));
+	var condsTable = person.getConditionsTable();
+	form.appendChild(condsTable);
+
+	var contsLabel = document.createElement('LABEL');
+	contsLabel.innerHTML = 'Emergency Contacts:';
+	form.appendChild(contsLabel);
+	form.appendChild(document.createElement('BR'));
+	var contsTable = person.getContactsTable();
+	form.appendChild(contsTable);
+	form.appendChild(document.createElement('BR'));
 }
 
 // Initialize Person from URL
 var person;
 if (window.location.href.includes('/?')) {
-	person = new Person(window.location.href);
+	person = new Person(updateForm, window.location.href);
 } else {
-	person = new Person('/?18075')
+	person = new Person(updateForm, '/?Taylor_Doe19930301A+0730180bees&peanuts&frogs&=meth&alcohol&=ibuprofin&1_pill&daily&pain&meds&1_shot&weekly&problems&=diabetes&kidneys&idk&heart_probs&badness&idkagain&=ann6025551234&mom4805551234&')
 }
 
-// Fill in input fields to HTML
-document.body.appendChild(getNumericInput('Weight (lbs): ', person.weight, 'weight'));
-document.body.appendChild(getNumericInput('Height (in): ', person.height, 'height'));
+updateForm();
+document.body.appendChild(form);
 
 // Add generate button to HTML
 var generateButton = document.createElement('INPUT');
@@ -34,10 +110,6 @@ var firstGen = true;
 generateButton.setAttribute('type','button');
 generateButton.setAttribute('value','Generate Emergency QR Code');
 generateButton.onclick = function() {
-	// Reconstruct person from input fields
-	person.weight = parseInt(document.getElementById('weight').value);
-	person.height = parseInt(document.getElementById('height').value);
-
 	// Generate QR Code
 	if (firstGen) {
 		qrcode = new QRCode("qrcode");
@@ -45,7 +117,8 @@ generateButton.onclick = function() {
 		qrcode.clear();
 	}
 	firstGen = false;
-	//qrcode.makeCode('file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode());
+
+	console.log('https://rupumped.github.io/EQR/?' + person.encode());
 	qrcode.makeCode('https://rupumped.github.io/EQR/?' + person.encode());
 };
 document.body.appendChild(generateButton);
