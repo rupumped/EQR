@@ -50,12 +50,12 @@ function Person(update, url) {
 		});
 	});
 
-	var contacts = data[i++].match(/([A-Za-z]+[0-9]+)\&/g);
-	//                               Name     Number
+	var contacts = data[i++].match(/([A-Za-z_]+[0-9]+)\&/g);
+	//                               Name      Number
 	this.contacts = [];
 	if (contacts) contacts.forEach(element => {
 		this.contacts.push({
-			name: element.match(/[A-Za-z]+/g)[0],
+			name: element.match(/[A-Za-z_]+/g)[0],
 			number: element.match(/[0-9]+/g)[0]
 		});
 	});
@@ -133,19 +133,19 @@ Person.prototype.getMedsTable = function() {
 		iic[i] = [];
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].name)));
-		iic[i][0].input.onchange = () => this.medications[i].name = decodeStr(iic[i][0].input.value);
+		iic[i][0].input.onchange = () => this.medications[i].name = encodeStr(iic[i][0].input.value);
 		tr.appendChild(iic[i][0].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].dose)));
-		iic[i][1].input.onchange = () => this.medications[i].dose = decodeStr(iic[i][1].input.value);
+		iic[i][1].input.onchange = () => this.medications[i].dose = encodeStr(iic[i][1].input.value);
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].freq)));
-		iic[i][2].input.onchange = () => this.medications[i].freq = decodeStr(iic[i][2].input.value);
+		iic[i][2].input.onchange = () => this.medications[i].freq = encodeStr(iic[i][2].input.value);
 		tr.appendChild(iic[i][2].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].reason)));
-		iic[i][3].input.onchange = () => this.medications[i].reason = decodeStr(iic[i][3].input.value);
+		iic[i][3].input.onchange = () => this.medications[i].reason = encodeStr(iic[i][3].input.value);
 		tr.appendChild(iic[i][3].cell);
 
 		medsTbody.appendChild(tr);
@@ -205,15 +205,15 @@ Person.prototype.getConditionsTable = function() {
 		iic[i] = [];
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].name)));
-		iic[i][0].input.onchange = () => this.conditions[i].name = decodeStr(iic[i][0].input.value);
+		iic[i][0].input.onchange = () => this.conditions[i].name = encodeStr(iic[i][0].input.value);
 		tr.appendChild(iic[i][0].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].effect)));
-		iic[i][1].input.onchange = () => this.conditions[i].effect = decodeStr(iic[i][1].input.value);
+		iic[i][1].input.onchange = () => this.conditions[i].effect = encodeStr(iic[i][1].input.value);
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].relevance)));
-		iic[i][2].input.onchange = () => this.conditions[i].relevance = decodeStr(iic[i][2].input.value);
+		iic[i][2].input.onchange = () => this.conditions[i].relevance = encodeStr(iic[i][2].input.value);
 		tr.appendChild(iic[i][2].cell);
 
 		medsTbody.appendChild(tr);
@@ -270,7 +270,7 @@ Person.prototype.getContactsTable = function() {
 		iic[i] = [];
 
 		iic[i].push(getInputInCell(decodeStr(this.contacts[i].name)));
-		iic[i][0].input.onchange = () => this.contacts[i].name = decodeStr(iic[i][0].input.value);
+		iic[i][0].input.onchange = () => this.contacts[i].name = encodeStr(iic[i][0].input.value);
 		tr.appendChild(iic[i][0].cell);
 
 		iic[i].push(getInputInCell(`${this.contacts[i].number.substring(0,3)}-${this.contacts[i].number.substring(3,6)}-${this.contacts[i].number.substring(6,10)}`));
