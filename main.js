@@ -123,11 +123,14 @@ generateButton.onclick = function() {
 	var code = 'https://rupumped.github.io/EQR/?' + person.encode();
 	console.log(code);
 	qrcode.makeCode(code);
-	if (firstGen) document.body.appendChild(document.createElement('BR'));
+	if (firstGen) {
+		document.body.appendChild(document.createElement('BR'));
+		document.body.appendChild(document.createElement('BR'));
+		document.body.appendChild(document.createTextNode('Use your smartphone to take a picture!'));
+	}
 
 	firstGen = false;
 };
 document.body.appendChild(generateButton);
 document.body.appendChild(document.createElement('BR'));
 document.body.appendChild(document.createElement('BR'));
-document.body.appendChild(document.createTextNode(' '));
