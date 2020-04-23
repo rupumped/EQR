@@ -49,22 +49,22 @@ function updateForm() {
 	weightEl.input.setAttribute('max',9999);
 	appendFormElement(weightEl);
 
-	var allergyEl = createFormElement('allergies', 'Allergies (comma-separated):', 'allergies', person.allergies.join());
+	var allergyEl = createFormElement('allergies', 'Allergies (comma-separated):', 'allergies', decodeStr(person.allergies.join()));
 	allergyEl.input.onchange = () => {
 		var allergies = myTrim(allergyEl.input.value,'[\\s,]').split(',');
 		for (let i=0; i<allergies.length; i++) {
-			allergies[i] = decodeStr(allergies[i]);
+			allergies[i] = encodeStr(allergies[i]);
 		}
 		if (allergies.length==1 && allergies[0]=='') allergies = [];
 		person.allergies = allergies;
 	};
 	appendFormElement(allergyEl);
 
-	var addictionEl = createFormElement('addictions', 'Addictions (comma-separated):', 'addictions', person.addictions.join());
+	var addictionEl = createFormElement('addictions', 'Addictions (comma-separated):', 'addictions', decodeStr(person.addictions.join()));
 	addictionEl.input.onchange = () => {
 		var addictions = myTrim(addictionEl.input.value,'[\\s,]').split(',');
 		for (let i=0; i<addictions.length; i++) {
-			addictions[i] = decodeStr(addictions[i]);
+			addictions[i] = encodeStr(addictions[i]);
 		}
 		if (addictions.length==1 && addictions[0]=='') addictions = [];
 		person.addictions = addictions;
