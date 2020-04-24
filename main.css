@@ -1,7 +1,26 @@
+:root {
+	--main-bg-color: rgb(210,238,249);
+	--accent-bg-color: rgb(23,86,187);
+	--accent-border-color: rgb(17,64,140);
+	--form-bg-color: white;
+	--main-text-color: rgb(51,51,51);
+	--accent-text-color: white;
+	--main-font-family: 'Open Sans';
+	--accent-font-family: 'Open Sans Condensed';
+	--main-input-border-color: grey;
+	--close-button-bg-color: rgb(249,74,107);
+	--close-button-border-color: rgb(207,31,74);
+	--add-button-bg-color: rgb(211,211,211);
+	--add-button-border-color: rgb(151,151,151);
+}
+
 body {
-	background-color: rgb(225,250,248);
-	font-family: Trebuchet MS, sans-serif;
-	color: rgb(51,51,51);
+	background-color: var(--main-bg-color);
+	font-family: var(--main-font-family);
+	color: var(--main-text-color);
+}
+.spacer {
+	height: 2em;
 }
 
 label {
@@ -11,73 +30,80 @@ label {
 label.unit {
 	margin-right:0;
 }
+.tableLabel {
+	font-weight: bold;
+}
 
 input {
 	font-size: large;
-	border: 1px solid grey;
+	font-family: var(--main-font-family);
+	border: 1px solid var(--main-input-border-color);
 }
 input, textarea {
 	padding: 0.2em;
 }
-input.phone {
-	width: 10em;
-}
-input.list {
-	width: 100%;
-}
-input.long {
-	width: 20em;
-}
-input.short {
-	width: 5em;
-}
-input[type=button] {
-	padding: 0.3em;
-	border: 0px solid black;
-}
-input.close {
-	display: block;
-	background-color: rgb(254,73,124);
-	border: 1px solid rgb(133,1,37);
-	height: 1.7em;
-	width: 1.7em;
-	border-radius: 50%;
-	text-align: center;
-	padding: 0;
-	font-size: small;
-	font-weight: bold;
-}
-input.add {
-	background-color: rgb(211,211,211);
-	border: 1px solid rgb(151,151,151);
-	border-radius: 50%;
-	height: 1.7em;
-	width: 1.7em;
-	text-align: center;
-	padding: 0;
-	font-size: small;
-	font-weight: bold;
+input[type=checkbox] {
+	width: 1.1em;
+	height: 1.1em;
 }
 
+.tableWrapper {
+	overflow-x:auto;
+}
 table {
-	width: 100%;
+	width: 99%;
+	min-width: 47em;
+	table-layout: fixed;
 }
 th {
+	width: 100%;
 	font-size: large;
 	font-weight:normal;
 }
+th.close {
+	width: 1.2em;
+}
+table input {
+	width: 100%;
+}
+table input.list {
+	width: 97%;
+	min-width: 26em;
+}
+input[type=date] {
+	font-family: var(--main-font-family);
+}
+table input[type=button] {
+	height: 1.7em;
+	width: 1.7em;
+	border-radius: 50%;
+	text-align: center;
+	font-size: small;
+	font-weight: bold;
+	padding-bottom: 1.5em;
+	padding-left: 0.45em;
+	padding-right: 1.05em;
+}
+table input.close {
+	background-color: var(--close-button-bg-color);
+	border: 1px solid var(--close-button-border-color);
+}
+table input.add {
+	background-color: var(--add-button-bg-color);
+	border: 1px solid var(--add-button-border-color);
+}
 
 #wrapper {
-	background-color: white;
-	margin-bottom:20px;
+	background-color: var(--form-bg-color);
 	width: 55%;
 	margin-left: auto ;
 	margin-right: auto ;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 #header {
-	background-color: rgb(33,182,112);
-	color: white;
+	background-color: var(--accent-bg-color);
+	color: var(--accent-text-color);
+	font-family: var(--accent-font-family);
 	font-weight: 1;
 	padding-left: 4%;
 	padding-top: 5%;
@@ -88,11 +114,24 @@ th {
 	padding: 4%;
 }
 
+#title {
+	display: inline-block;
+}
+#help {
+	display: inline-block;
+	float: right;
+	padding-right: 4%;
+	padding-top: 5%;
+}
+#help img {
+	height: 1em;
+}
+
 #qrcode {
-  width:160px;
-  height:160px;
-  margin-top:15px;
-  margin-bottom:15px;
+	width:160px;
+	height:160px;
+	margin-top:15px;
+	margin-bottom:15px;
 }
 
 #bloodInput {
@@ -111,13 +150,36 @@ th {
 #listsTable {
 	width: 100%;
 }
+#allergyLabelTD {
+	width: 17em;
+}
+
+#medicationsTable th.col2 {
+	width: 5em;
+}
+#medicationsTable th.col3 {
+	width: 8em;
+}
+#conditionsTable th.col1 {
+	width: 12em;
+}
+#contactsTable th.col2 {
+	width: 10em;
+}
 
 #generateButton {
-	background-color: rgb(33,182,112);
-	border: 1px solid rgb(156,1,44);
+	background-color: var(--accent-bg-color);
+	border: 1px solid var(--accent-border-color);
 	color: white;
+	font-weight: bold;
 	padding-right: 3em;
 	padding-left: 3em;
 	padding-bottom: 0.6em;
 	padding-top: 0.6em;
+}
+
+@media only screen and (max-device-width: 1024px) {
+	#wrapper {
+		width: 99%;
+	}
 }

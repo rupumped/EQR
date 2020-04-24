@@ -13,8 +13,8 @@ function Person(update, url) {
 
 	url = url.substring(url.indexOf('/?')+2);
 	// TODO: Add support for all unicode letters \p{L}. Currently, Firefox does not support this.
-	var re = new RegExp('('+REGEX.NAME+')' + '(\\d{4})(\\d{2})(\\d{2})' + '('+REGEX.BLOOD+')' + '('+REGEX.HEIGHT+')' + '('+REGEX.WEIGHT+')' + '((?:'+REGEX.TEXT+'\\&)*)' + '=((?:'+REGEX.TEXT+'\\&)*)' + '=((?:(?:'+REGEX.TEXT+'\\&){4})*)' + '=((?:(?:'+REGEX.TEXT+'\\&){3})*)' + '=((?:'+REGEX.NAME+'\\d+'+REGEX.NAME+'\\&)*)=');
-	//                   Name                 DOB                          Blood Type            Height                 Weight                 Allergies                    = Addictions                  = Medications                        = Medical Conditions                 = Emergency Contacts                       =
+	var re = new RegExp('('+REGEX.NAME+')' + '(\\d{4})(\\d{2})(\\d{2})' + '('+REGEX.BLOOD+')' + '('+REGEX.HEIGHT+')' + '('+REGEX.WEIGHT+')' + '([YN])' + '((?:'+REGEX.TEXT+'\\&)*)' + '=((?:'+REGEX.TEXT+'\\&)*)' + '=((?:(?:'+REGEX.TEXT+'\\&){4})*)' + '=((?:(?:'+REGEX.TEXT+'\\&){3})*)' + '=((?:'+REGEX.NAME+'\\d+'+REGEX.NAME+'\\&)*)=');
+	//                   Name                 DOB                          Blood Type            Height                 Weight                 Suicide    Allergies                    = Addictions                  = Medications                        = Medical Conditions                 = Emergency Contacts                       =
 	var data = url.match(re);
 	var i=1;
 	this.name = data[i++];
@@ -28,6 +28,8 @@ function Person(update, url) {
 	var heightStr = data[i++];
 	this.height = { ft: parseInt(heightStr.substring(0,1)), in: parseInt(heightStr.substring(1,3)) };
 	this.weight = parseInt(data[i++]);
+
+	this.suicide = data[i++]==='Y';
 
 	var allergies = data[i++].match(new RegExp('('+REGEX.TEXT+')\\&', 'g'));
 	this.allergies = [];
@@ -74,6 +76,7 @@ function Person(update, url) {
 
 Person.prototype.encode = function() {
 	var str = `${this.name}${this.DOB.yr}${this.DOB.mo}${this.DOB.da}${this.blood}${this.height.ft}${pad(this.height.in,2)}${pad(this.weight,4)}`;
+	str+= this.suicide ? 'Y' : 'N';
 	this.allergies.forEach(allergen => str+=allergen+'&');
 	str+='=';
 	this.addictions.forEach(addiction => str+=addiction+'&');
@@ -106,19 +109,25 @@ Person.prototype.remove = function(what, index) {
 
 Person.prototype.getMedsTable = function() {
 	var thisPerson = this;
+	var tableWrapper = document.createElement('DIV');
+	tableWrapper.className += ' tableWrapper';
 	var medsTable = document.createElement('TABLE');
+	medsTable.setAttribute('id','medicationsTable');
 	var medsTbody = document.createElement('TBODY');
 
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
+	td_0_0.className += ' close';
 	headerTR.appendChild(td_0_0);
 	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
 	var td_0_2 = document.createElement('TH');
+	td_0_2.className += ' col2';
 	td_0_2.appendChild(document.createTextNode('Dosage'));
 	headerTR.appendChild(td_0_2);
 	var td_0_3 = document.createElement('TH');
+	td_0_3.className += ' col3';
 	td_0_3.appendChild(document.createTextNode('Frequency'));
 	headerTR.appendChild(td_0_3);
 	var td_0_4 = document.createElement('TH');
@@ -184,18 +193,24 @@ Person.prototype.getMedsTable = function() {
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
-	return medsTable;
+	tableWrapper.appendChild(medsTable);
+	return tableWrapper;
 }
 
 Person.prototype.getConditionsTable = function() {
 	var thisPerson = this;
+	var tableWrapper = document.createElement('DIV');
+	tableWrapper.className += ' tableWrapper';
 	var medsTable = document.createElement('TABLE');
+	medsTable.setAttribute('id','conditionsTable');
 	var medsTbody = document.createElement('TBODY');
 
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
+	td_0_0.className += ' close';
 	headerTR.appendChild(td_0_0);
 	var td_0_1 = document.createElement('TH');
+	td_0_1.className += ' col1';
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
 	var td_0_2 = document.createElement('TH');
@@ -259,21 +274,27 @@ Person.prototype.getConditionsTable = function() {
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
-	return medsTable;
+	tableWrapper.appendChild(medsTable);
+	return tableWrapper;
 }
 
 Person.prototype.getContactsTable = function() {
 	var thisPerson = this;
+	var tableWrapper = document.createElement('DIV');
+	tableWrapper.className += ' tableWrapper';
 	var medsTable = document.createElement('TABLE');
+	medsTable.setAttribute('id','contactsTable');
 	var medsTbody = document.createElement('TBODY');
 
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
+	td_0_0.className += ' close';
 	headerTR.appendChild(td_0_0);
 	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
 	var td_0_2 = document.createElement('TH');
+	td_0_2.className += ' col2';
 	td_0_2.appendChild(document.createTextNode('Phone Number'));
 	headerTR.appendChild(td_0_2);
 	var td_0_3 = document.createElement('TH');
@@ -339,12 +360,14 @@ Person.prototype.getContactsTable = function() {
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
-	return medsTable;
+	tableWrapper.appendChild(medsTable);
+	return tableWrapper;
 }
 
 Person.prototype.validate = function() {
 	var result = true;
 	var errors = [];
+	var encoding = '';
 	var aMatch = [];
 
 	// Name
@@ -456,9 +479,9 @@ Person.prototype.validate = function() {
 	// Final Check
 	if (result) {
 		try {
-			var encoding = '/?' + person.encode();
-			var newPerson = new Person(this.update, encoding);
-			var newEncoding = '/?' + newPerson.encode();
+			encoding = person.encode();
+			var newPerson = new Person(this.update, '/?'+encoding);
+			var newEncoding = newPerson.encode();
 			if (encoding !== newEncoding) {
 				result = false;
 				errors.push(`Unknown error. Encoding can't be replicated. Encoding 1: "${encoding}" Encoding 2: "${newEncoding}`);
@@ -470,7 +493,7 @@ Person.prototype.validate = function() {
 		}
 	}
 
-	return {result: result, errors: errors};
+	return {result: result, errors: errors, encoding: encoding};
 }
 
 function getInputInCell(value) {

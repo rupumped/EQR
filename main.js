@@ -1,5 +1,11 @@
 var MAIN_DIV = document.getElementById('mainDiv');
 
+function createSpacer() {
+	var spacer = document.createElement('DIV');
+	spacer.className += ' spacer';
+	return spacer;
+}
+
 function createFormElement(id,labelText,type,value,noteText='') {
 	var label = document.createElement('LABEL');
 	label.setAttribute('for', id);
@@ -94,6 +100,13 @@ function updateForm() {
 	weightEl.input.required = true;
 	appendFormElement(weightEl);
 
+	var suicideEl = createFormElement('suicide', 'Past suicide attempt(s):', 'checkbox', '');
+	suicideEl.input.checked = person.suicide;
+	suicideEl.input.onchange = () => person.suicide = suicideEl.input.checked;
+	appendFormElement(suicideEl);
+
+	var listsTableWrapper = document.createElement('DIV');
+	listsTableWrapper.className += ' tableWrapper';
 	var listsTable = document.createElement('TABLE');
 	listsTable.setAttribute('id','listsTable');
 	var listsTbody = document.createElement('TBODY');
@@ -110,6 +123,7 @@ function updateForm() {
 	allergyEl.input.className += ' list';
 	var allergyTR = document.createElement('TR');
 	var allergyLabelTD = document.createElement('TD');
+	allergyLabelTD.setAttribute('id','allergyLabelTD');
 	allergyLabelTD.appendChild(allergyEl.label);
 	allergyTR.appendChild(allergyLabelTD);
 	var allergyInputTD = document.createElement('TD');
@@ -130,6 +144,7 @@ function updateForm() {
 	addictionEl.input.className += ' list';
 	addictionTR = document.createElement('TR');
 	var addictionLabelTD = document.createElement('TD');
+	addictionLabelTD.setAttribute('id','addictionLabelTD');
 	addictionLabelTD.appendChild(addictionEl.label);
 	addictionTR.appendChild(addictionLabelTD);
 	var addictionInputTD = document.createElement('TD');
@@ -138,11 +153,13 @@ function updateForm() {
 	listsTbody.appendChild(addictionTR);
 
 	listsTable.appendChild(listsTbody);
-	form.appendChild(listsTable);
-	form.appendChild(document.createElement('BR'));
+	listsTableWrapper.appendChild(listsTable);
+	form.appendChild(listsTableWrapper);
+	form.appendChild(createSpacer());
 
 	// Medications
 	var medsLabel = document.createElement('LABEL');
+	medsLabel.className += ' tableLabel';
 	medsLabel.innerHTML = 'Medications:';
 	form.appendChild(medsLabel);
 	form.appendChild(document.createElement('BR'));
@@ -150,8 +167,9 @@ function updateForm() {
 	form.appendChild(medsTable);
 
 	// Conditions
-	form.appendChild(document.createElement('BR'));
+	form.appendChild(createSpacer());
 	var condsLabel = document.createElement('LABEL');
+	condsLabel.className += ' tableLabel';
 	condsLabel.innerHTML = 'Medical Conditions:';
 	form.appendChild(condsLabel);
 	form.appendChild(document.createElement('BR'));
@@ -159,14 +177,15 @@ function updateForm() {
 	form.appendChild(condsTable);
 
 	// Contacts
-	form.appendChild(document.createElement('BR'));
+	form.appendChild(createSpacer());
 	var contsLabel = document.createElement('LABEL');
+	contsLabel.className += ' tableLabel';
 	contsLabel.innerHTML = 'Emergency Contacts:';
 	form.appendChild(contsLabel);
 	form.appendChild(document.createElement('BR'));
 	var contsTable = person.getContactsTable();
 	form.appendChild(contsTable);
-	form.appendChild(document.createElement('BR'));
+	form.appendChild(createSpacer());
 }
 
 // Initialize Person from URL
@@ -174,7 +193,7 @@ var person;
 if (window.location.href.includes('/?')) {
 	person = new Person(updateForm, window.location.href);
 } else {
-	person = new Person(updateForm, '/?Taylor_Doe19830301A+6020180amoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=')
+	person = new Person(updateForm, '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=')
 }
 
 updateForm();
@@ -196,8 +215,8 @@ generateButton.onclick = function() {
 	if (valResult.result) {
 		qrDiv.style.display = 'initial';
 		errorDiv.innerHTML='';
-		//var code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + person.encode();
-		var code = 'https://rupumped.github.io/EQR/?' + person.encode();
+		//var code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + valResult.encoding;
+		var code = 'https://rupumped.github.io/EQR/?' + valResult.encoding;
 		console.log(code);
 		qrcode.makeCode(code);
 	} else {
