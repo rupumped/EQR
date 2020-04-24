@@ -1,3 +1,93 @@
+body {
+	background-color: rgb(225,250,248);
+	font-family: Trebuchet MS, sans-serif;
+	color: rgb(51,51,51);
+}
+
+label {
+	margin-right:1em;
+	font-size: large;
+}
+label.unit {
+	margin-right:0;
+}
+
+input {
+	font-size: large;
+	border: 1px solid grey;
+}
+input, textarea {
+	padding: 0.2em;
+}
+input.phone {
+	width: 10em;
+}
+input.list {
+	width: 100%;
+}
+input.long {
+	width: 20em;
+}
+input.short {
+	width: 5em;
+}
+input[type=button] {
+	padding: 0.3em;
+	border: 0px solid black;
+}
+input.close {
+	display: block;
+	background-color: rgb(254,73,124);
+	border: 1px solid rgb(133,1,37);
+	height: 1.7em;
+	width: 1.7em;
+	border-radius: 50%;
+	text-align: center;
+	padding: 0;
+	font-size: small;
+	font-weight: bold;
+}
+input.add {
+	background-color: rgb(211,211,211);
+	border: 1px solid rgb(151,151,151);
+	border-radius: 50%;
+	height: 1.7em;
+	width: 1.7em;
+	text-align: center;
+	padding: 0;
+	font-size: small;
+	font-weight: bold;
+}
+
+table {
+	width: 100%;
+}
+th {
+	font-size: large;
+	font-weight:normal;
+}
+
+#wrapper {
+	background-color: white;
+	margin-bottom:20px;
+	width: 55%;
+	margin-left: auto ;
+	margin-right: auto ;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#header {
+	background-color: rgb(33,182,112);
+	color: white;
+	font-weight: 1;
+	padding-left: 4%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	font-size: xxx-large;
+}
+#mainDiv {
+	padding: 4%;
+}
+
 #qrcode {
   width:160px;
   height:160px;
@@ -5,10 +95,29 @@
   margin-bottom:15px;
 }
 
+#bloodInput {
+	width:3em;
+}
 #heightInputFt {
 	width:2em;
 }
-
 #heightInputIn {
 	width:3em;
+}
+#weightInput {
+	width:4em;
+}
+
+#listsTable {
+	width: 100%;
+}
+
+#generateButton {
+	background-color: rgb(33,182,112);
+	border: 1px solid rgb(156,1,44);
+	color: white;
+	padding-right: 3em;
+	padding-left: 3em;
+	padding-bottom: 0.6em;
+	padding-top: 0.6em;
 }

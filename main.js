@@ -1,3 +1,5 @@
+var MAIN_DIV = document.getElementById('mainDiv');
+
 function createFormElement(id,labelText,type,value,noteText='') {
 	var label = document.createElement('LABEL');
 	label.setAttribute('for', id);
@@ -42,7 +44,8 @@ function updateForm() {
 		bloodEl.input.value = bloodEl.input.value.toUpperCase();
 		person.blood = bloodEl.input.value;
 	}
-	bloodEl.input.setAttribute('pattern','(A|B|AB|O)[+-]')
+	bloodEl.input.setAttribute('pattern','(A|B|AB|O)[+-]');
+	bloodEl.input.setAttribute('id','bloodInput');
 	bloodEl.input.required = true;
 	appendFormElement(bloodEl);
 
@@ -60,7 +63,8 @@ function updateForm() {
 	heightInputFt.onchange = () => person.height.ft = parseInt(heightInputFt.value);
 	form.appendChild(heightInputFt);
 	var heightLabelFt = document.createElement('LABEL');
-	heightLabelFt.innerHTML = `'&nbsp;`;
+	heightLabelFt.className += ' unit';
+	heightLabelFt.innerHTML = `&nbsp;ft.&nbsp;&nbsp;`;
 	form.appendChild(heightLabelFt);
 	var heightInputIn = document.createElement('INPUT');
 	heightInputIn.setAttribute('type', 'number');
@@ -72,7 +76,8 @@ function updateForm() {
 	heightInputIn.onchange = () => person.height.in = parseInt(heightInputIn.value);
 	form.appendChild(heightInputIn);
 	var heightLabelIn = document.createElement('LABEL');
-	heightLabelIn.innerHTML = `"`;
+	heightLabelIn.className += ' unit';
+	heightLabelIn.innerHTML = `&nbsp;in.`;
 	form.appendChild(heightLabelIn);
 	var heightNote = document.createElement('SMALL');
 	heightNote.innerHTML = '';
@@ -83,11 +88,15 @@ function updateForm() {
 	// Weight
 	var weightEl = createFormElement('weight', 'Weight (lbs):', 'number', person.weight);
 	weightEl.input.onchange = () => person.weight = parseInt(weightEl.input.value);
+	weightEl.input.setAttribute('id','weightInput')
 	weightEl.input.setAttribute('min',0);
 	weightEl.input.setAttribute('max',9999);
 	weightEl.input.required = true;
 	appendFormElement(weightEl);
 
+	var listsTable = document.createElement('TABLE');
+	listsTable.setAttribute('id','listsTable');
+	var listsTbody = document.createElement('TBODY');
 	// Allergies
 	var allergyEl = createFormElement('allergies', 'Allergies (comma-separated):', 'allergies', decodeStr(person.allergies.join()));
 	allergyEl.input.onchange = () => {
@@ -98,7 +107,15 @@ function updateForm() {
 		if (allergies.length==1 && allergies[0]=='') allergies = [];
 		person.allergies = allergies;
 	};
-	appendFormElement(allergyEl);
+	allergyEl.input.className += ' list';
+	var allergyTR = document.createElement('TR');
+	var allergyLabelTD = document.createElement('TD');
+	allergyLabelTD.appendChild(allergyEl.label);
+	allergyTR.appendChild(allergyLabelTD);
+	var allergyInputTD = document.createElement('TD');
+	allergyInputTD.appendChild(allergyEl.input);
+	allergyTR.appendChild(allergyInputTD);
+	listsTbody.appendChild(allergyTR);
 
 	// Addictions
 	var addictionEl = createFormElement('addictions', 'Addictions (comma-separated):', 'addictions', decodeStr(person.addictions.join()));
@@ -110,7 +127,19 @@ function updateForm() {
 		if (addictions.length==1 && addictions[0]=='') addictions = [];
 		person.addictions = addictions;
 	};
-	appendFormElement(addictionEl);
+	addictionEl.input.className += ' list';
+	addictionTR = document.createElement('TR');
+	var addictionLabelTD = document.createElement('TD');
+	addictionLabelTD.appendChild(addictionEl.label);
+	addictionTR.appendChild(addictionLabelTD);
+	var addictionInputTD = document.createElement('TD');
+	addictionInputTD.appendChild(addictionEl.input);
+	addictionTR.appendChild(addictionInputTD);
+	listsTbody.appendChild(addictionTR);
+
+	listsTable.appendChild(listsTbody);
+	form.appendChild(listsTable);
+	form.appendChild(document.createElement('BR'));
 
 	// Medications
 	var medsLabel = document.createElement('LABEL');
@@ -149,7 +178,7 @@ if (window.location.href.includes('/?')) {
 }
 
 updateForm();
-document.body.appendChild(form);
+MAIN_DIV.appendChild(form);
 
 // Set up QR code
 var qrcode = new QRCode('qrcode');
@@ -184,9 +213,10 @@ generateButton.onclick = function() {
 		errorDiv.appendChild(document.createTextNode('Please fix the above errors and try again.'))
 	}
 };
-document.body.appendChild(generateButton);
-document.body.appendChild(document.createElement('BR'));
-document.body.appendChild(document.createElement('BR'));
-document.body.appendChild(errorDiv);
-document.body.removeChild(qrDiv);
-document.body.appendChild(qrDiv);
+generateButton.setAttribute('id','generateButton');
+MAIN_DIV.appendChild(generateButton);
+MAIN_DIV.appendChild(document.createElement('BR'));
+MAIN_DIV.appendChild(document.createElement('BR'));
+MAIN_DIV.appendChild(errorDiv);
+MAIN_DIV.removeChild(qrDiv);
+MAIN_DIV.appendChild(qrDiv);

@@ -110,18 +110,18 @@ Person.prototype.getMedsTable = function() {
 	var medsTbody = document.createElement('TBODY');
 
 	var headerTR = document.createElement('TR');
-	var td_0_0 = document.createElement('TD');
+	var td_0_0 = document.createElement('TH');
 	headerTR.appendChild(td_0_0);
-	var td_0_1 = document.createElement('TD');
+	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
-	var td_0_2 = document.createElement('TD');
+	var td_0_2 = document.createElement('TH');
 	td_0_2.appendChild(document.createTextNode('Dosage'));
 	headerTR.appendChild(td_0_2);
-	var td_0_3 = document.createElement('TD');
+	var td_0_3 = document.createElement('TH');
 	td_0_3.appendChild(document.createTextNode('Frequency'));
 	headerTR.appendChild(td_0_3);
-	var td_0_4 = document.createElement('TD');
+	var td_0_4 = document.createElement('TH');
 	td_0_4.appendChild(document.createTextNode('Reason'));
 	headerTR.appendChild(td_0_4);
 	medsTbody.appendChild(headerTR);
@@ -133,10 +133,11 @@ Person.prototype.getMedsTable = function() {
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
 		closeButton.setAttribute('type','button');
-		closeButton.setAttribute('value','X');
+		closeButton.setAttribute('value','×');
 		closeButton.onclick = function() {
 			thisPerson.remove('medication',i);
 		}
+		closeButton.className += ' close';
 		td_0.appendChild(closeButton);
 		tr.appendChild(td_0);
 
@@ -150,6 +151,7 @@ Person.prototype.getMedsTable = function() {
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].dose)));
 		iic[i][1].input.onchange = () => this.medications[i].dose = encodeStr(iic[i][1].input.value);
 		iic[i][1].input.required = true;
+		iic[i][1].input.className += ' short';
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].freq)));
@@ -170,11 +172,12 @@ Person.prototype.getMedsTable = function() {
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
 	addButton.setAttribute('type','button');
-	addButton.setAttribute('value','Add Medication');
+	addButton.setAttribute('value','+');
 	addButton.onclick = () => {
 		thisPerson.medications.push({name: 'Name', dose: 'Dosage', freq: 'Frequency', reason: 'Reason'});
 		thisPerson.update();
 	}
+	addButton.className += ' add';
 	lastCell.appendChild(addButton);
 	lastRow.appendChild(lastCell);
 	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
@@ -190,15 +193,15 @@ Person.prototype.getConditionsTable = function() {
 	var medsTbody = document.createElement('TBODY');
 
 	var headerTR = document.createElement('TR');
-	var td_0_0 = document.createElement('TD');
+	var td_0_0 = document.createElement('TH');
 	headerTR.appendChild(td_0_0);
-	var td_0_1 = document.createElement('TD');
+	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
-	var td_0_2 = document.createElement('TD');
+	var td_0_2 = document.createElement('TH');
 	td_0_2.appendChild(document.createTextNode('Symptoms'));
 	headerTR.appendChild(td_0_2);
-	var td_0_3 = document.createElement('TD');
+	var td_0_3 = document.createElement('TH');
 	td_0_3.appendChild(document.createTextNode('Relevance during emergency'));
 	headerTR.appendChild(td_0_3);
 	medsTbody.appendChild(headerTR);
@@ -210,10 +213,11 @@ Person.prototype.getConditionsTable = function() {
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
 		closeButton.setAttribute('type','button');
-		closeButton.setAttribute('value','X');
+		closeButton.setAttribute('value','×');
 		closeButton.onclick = function() {
 			thisPerson.remove('condition',i);
 		}
+		closeButton.className += ' close';
 		td_0.appendChild(closeButton);
 		tr.appendChild(td_0);
 
@@ -232,6 +236,7 @@ Person.prototype.getConditionsTable = function() {
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].relevance)));
 		iic[i][2].input.onchange = () => this.conditions[i].relevance = encodeStr(iic[i][2].input.value);
 		iic[i][2].input.required = true;
+		iic[i][2].input.className += ' long';
 		tr.appendChild(iic[i][2].cell);
 
 		medsTbody.appendChild(tr);
@@ -242,11 +247,12 @@ Person.prototype.getConditionsTable = function() {
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
 	addButton.setAttribute('type','button');
-	addButton.setAttribute('value','Add Condition');
+	addButton.setAttribute('value','+');
 	addButton.onclick = () => {
 		thisPerson.conditions.push({name: 'Name', effect: 'Effect', relevance: 'Relevance'});
 		thisPerson.update();
 	}
+	addButton.className += ' add';
 	lastCell.appendChild(addButton);
 	lastRow.appendChild(lastCell);
 	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
@@ -262,15 +268,15 @@ Person.prototype.getContactsTable = function() {
 	var medsTbody = document.createElement('TBODY');
 
 	var headerTR = document.createElement('TR');
-	var td_0_0 = document.createElement('TD');
+	var td_0_0 = document.createElement('TH');
 	headerTR.appendChild(td_0_0);
-	var td_0_1 = document.createElement('TD');
+	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
-	var td_0_2 = document.createElement('TD');
+	var td_0_2 = document.createElement('TH');
 	td_0_2.appendChild(document.createTextNode('Phone Number'));
 	headerTR.appendChild(td_0_2);
-	var td_0_3 = document.createElement('TD');
+	var td_0_3 = document.createElement('TH');
 	td_0_3.appendChild(document.createTextNode('Relationship'));
 	headerTR.appendChild(td_0_3);
 	medsTbody.appendChild(headerTR);
@@ -282,10 +288,11 @@ Person.prototype.getContactsTable = function() {
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
 		closeButton.setAttribute('type','button');
-		closeButton.setAttribute('value','X');
+		closeButton.setAttribute('value','×');
 		closeButton.onclick = function() {
 			thisPerson.remove('contact',i);
 		}
+		closeButton.className += ' close';
 		td_0.appendChild(closeButton);
 		tr.appendChild(td_0);
 
@@ -304,6 +311,7 @@ Person.prototype.getContactsTable = function() {
 		iic[i][1].input.pattern='[\\d\\-\\(\\) ]+'
 		iic[i][1].input.onchange = () => this.contacts[i].number = iic[i][1].input.value.match(/\d/g).join('');
 		iic[i][1].input.required = true;
+		iic[i][1].input.className += ' phone';
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.contacts[i].relation)));
@@ -319,11 +327,12 @@ Person.prototype.getContactsTable = function() {
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
 	addButton.setAttribute('type','button');
-	addButton.setAttribute('value','Add Contact');
+	addButton.setAttribute('value','+');
 	addButton.onclick = () => {
 		thisPerson.contacts.push({name: 'Name', number: '4805551234', relation: 'friend'});
 		thisPerson.update();
 	}
+	addButton.className += ' add';
 	lastCell.appendChild(addButton);
 	lastRow.appendChild(lastCell);
 	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
