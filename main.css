@@ -141,10 +141,9 @@ table input.add {
 	height: 1em;
 }
 
-#qrcode {
-	width:5cm;
-	height:5cm;
-	margin: 0 auto;
+#qrcode { /*5cm*/
+	width:160px;
+	height:160px;
 }
 
 #bloodInput {

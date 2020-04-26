@@ -208,7 +208,7 @@ MAIN_DIV.appendChild(createSpacer());
 
 // Set up QR code
 var qrDiv = document.getElementById('qrcode');
-var qrSize = 5/2.54*dpi;
+var qrSize = 128;//Math.round(5/2.54*dpi);
 var qrcode = new QRCode(qrDiv, {
 	width:qrSize,
 	height:qrSize
