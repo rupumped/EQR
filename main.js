@@ -1,5 +1,11 @@
 var MAIN_DIV = document.getElementById('mainDiv');
 
+var devicePixelRatio = 1;//window.devicePixelRatio || 1;
+var dpi_x = document.getElementById('testdiv').offsetWidth * devicePixelRatio;
+var dpi_y = document.getElementById('testdiv').offsetHeight * devicePixelRatio;
+var dpi = (dpi_x+dpi_y)/2;
+console.log(dpi); // 240 or 96 dpi
+
 function createSpacer() {
 	var spacer = document.createElement('DIV');
 	spacer.className += ' spacer';
@@ -198,10 +204,15 @@ if (window.location.href.includes('/?')) {
 
 updateForm();
 MAIN_DIV.appendChild(form);
+MAIN_DIV.appendChild(createSpacer());
 
 // Set up QR code
-var qrcode = new QRCode('qrcode');
 var qrDiv = document.getElementById('qrcode');
+var qrSize = 5/2.54*dpi;
+var qrcode = new QRCode(qrDiv, {
+	width:qrSize,
+	height:qrSize
+});
 
 // Add generate button to HTML
 var errorDiv = document.createElement('DIV');
@@ -213,12 +224,36 @@ generateButton.onclick = function() {
 	qrcode.clear();
 	var valResult = person.validate();
 	if (valResult.result) {
+		// Generate QR code
 		qrDiv.style.display = 'initial';
 		errorDiv.innerHTML='';
 		//var code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + valResult.encoding;
 		var code = 'https://rupumped.github.io/EQR/?' + valResult.encoding;
 		console.log(code);
 		qrcode.makeCode(code);
+
+		// Add "Print" button
+		var printButton = document.createElement('INPUT');
+		printButton.className += ' bigButton';
+		printButton.setAttribute('type','button');
+		printButton.setAttribute('value','Get Printable Version');
+		printButton.onclick = () => {
+			document.body.innerHTML = '';
+			document.body.style.backgroundColor = 'white';
+			document.body.style.color = 'black';
+			var walletCardV = document.createElement('DIV');
+			walletCardV.setAttribute('id','walletCardV');
+
+			var walletCardText = document.createElement('P');
+			walletCardText.innerHTML = 'EMERGENCY MEDICAL INFORMATION<br><br>SCAN ME';
+			walletCardText.className += ' walletText';
+			walletCardV.appendChild(walletCardText);
+
+			walletCardV.appendChild(qrDiv);
+			document.body.appendChild(walletCardV);
+		};
+		MAIN_DIV.appendChild(createSpacer());
+		MAIN_DIV.appendChild(printButton);
 	} else {
 		qrDiv.style.display = 'none';
 		errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
@@ -232,7 +267,7 @@ generateButton.onclick = function() {
 		errorDiv.appendChild(document.createTextNode('Please fix the above errors and try again.'))
 	}
 };
-generateButton.setAttribute('id','generateButton');
+generateButton.className += ' bigButton';
 MAIN_DIV.appendChild(generateButton);
 MAIN_DIV.appendChild(document.createElement('BR'));
 MAIN_DIV.appendChild(document.createElement('BR'));

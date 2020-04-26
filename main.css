@@ -7,6 +7,9 @@
 	--accent-text-color: white;
 	--main-font-family: 'Open Sans';
 	--accent-font-family: 'Open Sans Condensed';
+	--main-font-size: 1.125rem;
+	--header-font-size: 3rem;
+	--button-font-size: 0.7rem;
 	--main-input-border-color: grey;
 	--close-button-bg-color: rgb(249,74,107);
 	--close-button-border-color: rgb(207,31,74);
@@ -18,6 +21,7 @@ body {
 	background-color: var(--main-bg-color);
 	font-family: var(--main-font-family);
 	color: var(--main-text-color);
+	font-size: medium;
 }
 .spacer {
 	height: 2em;
@@ -25,7 +29,7 @@ body {
 
 label {
 	margin-right:1em;
-	font-size: large;
+	font-size: var(--main-font-size);
 }
 label.unit {
 	margin-right:0;
@@ -35,7 +39,7 @@ label.unit {
 }
 
 input {
-	font-size: large;
+	font-size: var(--main-font-size);
 	font-family: var(--main-font-family);
 	border: 1px solid var(--main-input-border-color);
 }
@@ -45,6 +49,16 @@ input, textarea {
 input[type=checkbox] {
 	width: 1.1em;
 	height: 1.1em;
+}
+.bigButton {
+	background-color: var(--accent-bg-color);
+	border: 1px solid var(--accent-border-color);
+	color: white;
+	font-weight: bold;
+	padding-right: 3em;
+	padding-left: 3em;
+	padding-bottom: 0.6em;
+	padding-top: 0.6em;
 }
 
 .tableWrapper {
@@ -57,8 +71,8 @@ table {
 }
 th {
 	width: 100%;
-	font-size: large;
-	font-weight:normal;
+	font-size: var(--main-font-size);
+	font-weight: normal;
 }
 th.close {
 	width: 1.2em;
@@ -78,7 +92,7 @@ table input[type=button] {
 	width: 1.7em;
 	border-radius: 50%;
 	text-align: center;
-	font-size: small;
+	font-size: var(--button-font-size);
 	font-weight: bold;
 	padding-bottom: 1.5em;
 	padding-left: 0.45em;
@@ -108,7 +122,7 @@ table input.add {
 	padding-left: 4%;
 	padding-top: 5%;
 	padding-bottom: 5%;
-	font-size: xxx-large;
+	font-size: var(--header-font-size);
 }
 #mainDiv {
 	padding: 4%;
@@ -128,10 +142,9 @@ table input.add {
 }
 
 #qrcode {
-	width:160px;
-	height:160px;
-	margin-top:15px;
-	margin-bottom:15px;
+	width:5cm;
+	height:5cm;
+	margin: 0 auto;
 }
 
 #bloodInput {
@@ -167,19 +180,47 @@ table input.add {
 	width: 10em;
 }
 
-#generateButton {
-	background-color: var(--accent-bg-color);
-	border: 1px solid var(--accent-border-color);
-	color: white;
+#walletCardV {
+	width: 4.998cm;	/* 5.398 cm */
+	height: 8.160cm;	/* 8.560 cm */
+	border: 1px solid black;
+	padding: 0.2cm;
+}
+.walletText {
+	text-align: center;
 	font-weight: bold;
-	padding-right: 3em;
-	padding-left: 3em;
-	padding-bottom: 0.6em;
-	padding-top: 0.6em;
+	font-family: var(--main-font-family);
 }
 
 @media only screen and (max-device-width: 1024px) {
+	:root {
+		--main-font-size: 2.25rem;
+		--header-font-size: 4.5rem;
+		--button-font-size: 2rem;
+	}
+	.bigButton {
+		width: 100%;
+	}
+	table {
+		width: 200%;
+	}
+	th.close {
+		width: 1.7em;
+	}
+	table input[type=button] {
+		height: 1.7em;
+		width: 1.7em;
+		padding-bottom: 1.5em;
+		padding-left: 0.52em;
+		padding-right: 0.98em;
+	}
 	#wrapper {
 		width: 99%;
+	}
+	#help {
+		padding-top: 1%;
+	}
+	#help img {
+		height: 1.5em;
 	}
 }
