@@ -213,6 +213,7 @@ var qrcode = new QRCode(qrDiv, {
 	width:qrSize,
 	height:qrSize
 });
+var firstTime = true;
 
 // Add generate button to HTML
 var errorDiv = document.createElement('DIV');
@@ -233,27 +234,30 @@ generateButton.onclick = function() {
 		qrcode.makeCode(code);
 
 		// Add "Print" button
-		var printButton = document.createElement('INPUT');
-		printButton.className += ' bigButton';
-		printButton.setAttribute('type','button');
-		printButton.setAttribute('value','Get Printable Version');
-		printButton.onclick = () => {
-			document.body.innerHTML = '';
-			document.body.style.backgroundColor = 'white';
-			document.body.style.color = 'black';
-			var walletCardV = document.createElement('DIV');
-			walletCardV.setAttribute('id','walletCardV');
+		if (firstTime) {
+			var printButton = document.createElement('INPUT');
+			printButton.className += ' bigButton';
+			printButton.setAttribute('type','button');
+			printButton.setAttribute('value','Get Printable Version');
+			printButton.onclick = () => {
+				document.body.innerHTML = '';
+				document.body.style.backgroundColor = 'white';
+				document.body.style.color = 'black';
+				var walletCardV = document.createElement('DIV');
+				walletCardV.setAttribute('id','walletCardV');
 
-			var walletCardText = document.createElement('P');
-			walletCardText.innerHTML = 'EMERGENCY MEDICAL INFORMATION<br><br>SCAN ME';
-			walletCardText.className += ' walletText';
-			walletCardV.appendChild(walletCardText);
+				var walletCardText = document.createElement('P');
+				walletCardText.innerHTML = 'EMERGENCY MEDICAL INFORMATION<br><br>SCAN ME';
+				walletCardText.className += ' walletText';
+				walletCardV.appendChild(walletCardText);
 
-			walletCardV.appendChild(qrDiv);
-			document.body.appendChild(walletCardV);
-		};
-		MAIN_DIV.appendChild(createSpacer());
-		MAIN_DIV.appendChild(printButton);
+				walletCardV.appendChild(qrDiv);
+				document.body.appendChild(walletCardV);
+			};
+			MAIN_DIV.appendChild(createSpacer());
+			MAIN_DIV.appendChild(printButton);
+		}
+		firstTime = false;
 	} else {
 		qrDiv.style.display = 'none';
 		errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
