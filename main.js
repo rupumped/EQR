@@ -1,6 +1,6 @@
 const DEFAULT_ENCODING = '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
-//const BASE_URL = 'https://rupumped.github.io/EQR/';
-const BASE_URL = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/';
+const BASE_URL = 'https://rupumped.github.io/EQR/';
+//const BASE_URL = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/';
 
 // Get screen DPI
 var devicePixelRatio = 1;//window.devicePixelRatio || 1;
