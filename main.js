@@ -80,11 +80,8 @@ if (person) {
 
 	// Add generate button to HTML
 	var errorDiv = document.getElementById('errorDiv');
-	var generateButton = document.getElementById('generate');
-	var printButtonWrapper = document.getElementById('printButtonWrapper');
-	var printButton = document.getElementById('print');
 	var code;
-	generateButton.onclick = function() {
+	document.getElementById('generate').onclick = function() {
 		errorDiv.innerHTML='';
 		qrcode.clear();
 		var valResult = person.validate();
@@ -98,8 +95,8 @@ if (person) {
 			qrcode.makeCode(code);
 
 			// Add "Print" button
-			printButtonWrapper.style.display = 'initial';
-			printButton.onclick = () => {
+			document.getElementById('printButtonWrapper').style.display = 'initial';
+			document.getElementById('print').onclick = () => {
 				document.getElementById('wrapper').style.display = 'none';
 				document.getElementById('printPageWrapper').style.display = 'initial';
 				document.body.style.backgroundColor = 'white';
@@ -112,8 +109,16 @@ if (person) {
 				qrImgH.setAttribute('id','qrImgH');
 				document.getElementById('walletTextH').appendChild(qrImgH);
 				document.getElementById('walletTextH').innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
+				window.print();
 			}
-			document.getElementById('download').addEventListener('click', () => { window.location.href = getBase64Image(qrDiv.children[1]).replace(/^data:image\/(png|jpg);base64,/, ''); }, false);
+			document.getElementById('download').onclick = () => {
+				document.getElementById('wrapper').style.display = 'none';
+				document.getElementById('downloadPageWrapper').style.display = 'initial';
+				document.body.style.backgroundColor = 'white';
+
+				var qrImg = qrDiv.children[1].cloneNode(true);
+				document.getElementById('downloadPageWrapper').appendChild(qrImg);
+			}
 		} else {
 			qrDiv.style.display = 'none';
 			errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
@@ -128,8 +133,7 @@ if (person) {
 		}
 	};
 
-	var returnButton = document.getElementById('return');
-	returnButton.onclick = function() {
-		window.location.href = code;
-	}
+	var returnFn = () => window.location.href = code;
+	document.getElementById('returnFromPrint').onclick = returnFn;
+	document.getElementById('returnFromDownload').onclick = returnFn;
 }
