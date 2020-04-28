@@ -1,0 +1,271 @@
+:root {
+	--main-bg-color: rgb(210,238,249);
+	--accent-bg-color: rgb(23,86,187);
+	--accent-border-color: rgb(17,64,140);
+	--form-bg-color: white;
+	--main-text-color: rgb(51,51,51);
+	--accent-text-color: white;
+	--main-font-family: 'Open Sans';
+	--accent-font-family: 'Open Sans Condensed';
+	--main-font-size: 1.125rem;
+	--header-font-size: 3rem;
+	--button-font-size: 0.7rem;
+	--main-input-border-color: grey;
+	--close-button-bg-color: rgb(249,74,107);
+	--close-button-border-color: rgb(207,31,74);
+	--add-button-bg-color: rgb(211,211,211);
+	--add-button-border-color: rgb(151,151,151);
+}
+
+body {
+	background-color: var(--main-bg-color);
+}
+
+.spacer {
+	height: 2em;
+}
+.h-spacer {
+	height: 2em;
+	width: 2em;
+	float: left;
+}
+
+label {
+	margin-right:1em;
+	font-size: var(--main-font-size);
+}
+label.unit {
+	margin-right:0;
+}
+.tableLabel {
+	font-weight: bold;
+}
+
+input {
+	font-size: var(--main-font-size);
+	font-family: var(--main-font-family);
+	border: 1px solid var(--main-input-border-color);
+}
+input, textarea {
+	padding: 0.2em;
+}
+input[type=checkbox] {
+	width: 1.1em;
+	height: 1.1em;
+}
+.bigButton {
+	background-color: var(--accent-bg-color);
+	border: 1px solid var(--accent-border-color);
+	color: white;
+	font-weight: bold;
+	padding-right: 3em;
+	padding-left: 3em;
+	padding-bottom: 0.6em;
+	padding-top: 0.6em;
+	width: 22em;
+}
+
+.tableWrapper {
+	overflow-x:auto;
+}
+table {
+	width: 99%;
+	min-width: 47em;
+	table-layout: fixed;
+}
+th {
+	width: 100%;
+	font-size: var(--main-font-size);
+	font-weight: normal;
+}
+th.close {
+	width: 1.2em;
+}
+table input {
+	width: 100%;
+}
+input.list {
+	width: 100%;
+}
+input[type=date] {
+	font-family: var(--main-font-family);
+}
+table input[type=button] {
+	height: 1.7em;
+	width: 1.7em;
+	border-radius: 50%;
+	text-align: center;
+	font-size: var(--button-font-size);
+	font-weight: bold;
+	padding-bottom: 1.5em;
+	padding-left: 0.45em;
+	padding-right: 1.05em;
+}
+table input.close {
+	background-color: var(--close-button-bg-color);
+	border: 1px solid var(--close-button-border-color);
+}
+table input.add {
+	background-color: var(--add-button-bg-color);
+	border: 1px solid var(--add-button-border-color);
+}
+
+p, ol {
+	font-family: var(--main-font-family);
+}
+
+#mainPage {
+	background-color: var(--main-bg-color);
+	font-family: var(--main-font-family);
+	color: var(--main-text-color);
+	font-size: medium;
+}
+#wrapper {
+	background-color: var(--form-bg-color);
+	width: 55%;
+	margin-left: auto ;
+	margin-right: auto ;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#header {
+	background-color: var(--accent-bg-color);
+	color: var(--accent-text-color);
+	font-family: var(--accent-font-family);
+	font-weight: 1;
+	padding-left: 4%;
+	padding-top: 5%;
+	padding-bottom: 5%;
+	font-size: var(--header-font-size);
+}
+.bigDiv {
+	padding: 4%;
+}
+#printPageWrapper {
+	background-color: white;
+	color: black;
+}
+
+#title {
+	display: inline-block;
+}
+#help {
+	display: inline-block;
+	float: right;
+	padding-right: 4%;
+	padding-top: 5%;
+}
+#help img {
+	height: 1em;
+}
+
+#qrcode { /*5cm*/
+	width:160px;
+	height:160px;
+}
+img {
+	image-rendering: pixelated;
+}
+
+#blood {
+	width:3em;
+}
+#heightFt {
+	width:2em;
+}
+#heightIn {
+	width:3em;
+}
+#weight {
+	width:4em;
+}
+
+#listsTable {
+	width: 100%;
+}
+
+#medicationsTable th.col2 {
+	width: 5em;
+}
+#medicationsTable th.col3 {
+	width: 8em;
+}
+#conditionsTable th.col1 {
+	width: 12em;
+}
+#contactsTable th.col2 {
+	width: 10em;
+}
+
+#walletCardV {
+	width: 5.198cm;	/* 5.398 cm */
+	height: 8.360cm;	/* 8.560 cm */
+	border: 1px solid black;
+	padding: 0.1cm;
+	float: left;
+}
+#walletCardH {
+	width: 8.360cm;
+	height: 5.198cm;
+	border: 1px solid black;
+	padding: 0.1cm;
+	float: left;
+}
+.walletText {
+	text-align: center;
+	font-weight: bold;
+	font-family: var(--main-font-family);
+}
+#walletTextH {
+	float: left;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+#qrImgV {
+	width: 100%;
+	height: 5cm;
+}
+#qrImgH {
+	width: 5cm;
+	height: 100%;
+	float: left;
+}
+
+@media only screen and (max-device-width: 1024px) {
+	:root {
+		--main-font-size: 2.25rem;
+		--header-font-size: 4.5rem;
+		--button-font-size: 2rem;
+	}
+	.bigButton {
+		width: 100%;
+	}
+	table {
+		width: 200%;
+	}
+	th.close {
+		width: 1.7em;
+	}
+	table input[type=button] {
+		height: 1.7em;
+		width: 1.7em;
+		padding-bottom: 1.5em;
+		padding-left: 0.52em;
+		padding-right: 0.98em;
+	}
+	#wrapper {
+		width: 99%;
+	}
+	#help {
+		padding-top: 1%;
+	}
+	#help img {
+		height: 1.5em;
+	}
+}
+
+@media print {
+	#returnFromPrint {
+		display: none;
+	}
+}
