@@ -17,6 +17,10 @@
 	--add-button-border-color: rgb(151,151,151);
 }
 
+body {
+	background-color: var(--main-bg-color);
+}
+
 .spacer {
 	height: 2em;
 }

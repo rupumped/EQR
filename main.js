@@ -91,6 +91,7 @@ generateButton.onclick = function() {
 		printButton.onclick = () => {
 			document.getElementById('wrapper').style.display = 'none';
 			document.getElementById('printPageWrapper').style.display = 'initial';
+			document.body.style.backgroundColor = 'white';
 
 			var qrImgV = qrDiv.children[1].cloneNode(true);
 			qrImgV.setAttribute('id','qrImgV');
