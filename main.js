@@ -1,197 +1,56 @@
-var MAIN_DIV = document.getElementById('mainDiv');
-
+// Get screen DPI
 var devicePixelRatio = 1;//window.devicePixelRatio || 1;
 var dpi_x = document.getElementById('testdiv').offsetWidth * devicePixelRatio;
 var dpi_y = document.getElementById('testdiv').offsetHeight * devicePixelRatio;
 var dpi = (dpi_x+dpi_y)/2;
-console.log(dpi); // 240 or 96 dpi
 
-function createSpacer() {
-	var spacer = document.createElement('DIV');
-	spacer.className += ' spacer';
-	return spacer;
-}
-
-function createFormElement(id,labelText,type,value,noteText='') {
-	var label = document.createElement('LABEL');
-	label.setAttribute('for', id);
-	label.innerHTML = labelText;
-	var input = document.createElement('INPUT');
-	input.setAttribute('type', type);
-	input.setAttribute('id', id);
-	input.setAttribute('value', value);
-	var note = document.createElement('SMALL');
-	note.innerHTML = noteText;
-	return {label: label, input: input, note: note};
-}
-
-function appendFormElement(element) {
-	form.appendChild(element.label);
-	form.appendChild(element.input);
-	form.appendChild(element.note);
-	form.appendChild(document.createElement('BR'));
-	form.appendChild(document.createElement('BR'));
+function setFormElement(id, value, onchange) {
+	var el = document.getElementById(id);
+	el.setAttribute('value',value);
+	el.onchange = onchange;
 }
 
 // Fill in input fields to HTML
-var form = document.createElement('FORM');
 function updateForm() {
-	form.innerHTML = '';
-
-	// Name
-	var nameEl = createFormElement('name', 'Full Name:', 'text', decodeStr(person.name));
-	nameEl.input.onchange = () => person.name = encodeStr(nameEl.input.value);
-	nameEl.input.required = true;
-	appendFormElement(nameEl);
-
-	// DOB
-	var dobEl = createFormElement('dob', 'Date of Birth:', 'date', `${person.DOB.yr}-${person.DOB.mo}-${person.DOB.da}`);
-	dobEl.input.onchange = () => person.DOB = {yr: dobEl.input.value.split('-')[0], mo: dobEl.input.value.split('-')[1], da: dobEl.input.value.split('-')[2]};
-	dobEl.input.required = true;
-	appendFormElement(dobEl);
-
-	// Blood Type
-	var bloodEl = createFormElement('blood', 'Blood Type:', 'text', person.blood);
-	bloodEl.input.onchange = () => {
-		bloodEl.input.value = bloodEl.input.value.toUpperCase();
-		person.blood = bloodEl.input.value;
-	}
-	bloodEl.input.setAttribute('pattern','(A|B|AB|O)[+-]');
-	bloodEl.input.setAttribute('id','bloodInput');
-	bloodEl.input.required = true;
-	appendFormElement(bloodEl);
-
-	// Height
-	var heightLabel = document.createElement('LABEL');
-	heightLabel.innerHTML = 'Height:';
-	form.appendChild(heightLabel);
-	var heightInputFt = document.createElement('INPUT');
-	heightInputFt.setAttribute('type', 'number');
-	heightInputFt.setAttribute('value', person.height.ft);
-	heightInputFt.setAttribute('min',0);
-	heightInputFt.setAttribute('max',9);
-	heightInputFt.setAttribute('id','heightInputFt');
-	heightInputFt.required = true;
-	heightInputFt.onchange = () => person.height.ft = parseInt(heightInputFt.value);
-	form.appendChild(heightInputFt);
-	var heightLabelFt = document.createElement('LABEL');
-	heightLabelFt.className += ' unit';
-	heightLabelFt.innerHTML = `&nbsp;ft.&nbsp;&nbsp;`;
-	form.appendChild(heightLabelFt);
-	var heightInputIn = document.createElement('INPUT');
-	heightInputIn.setAttribute('type', 'number');
-	heightInputIn.setAttribute('value', person.height.in);
-	heightInputIn.setAttribute('min',0);
-	heightInputIn.setAttribute('max',11);
-	heightInputIn.setAttribute('id','heightInputIn');
-	heightInputIn.required = true;
-	heightInputIn.onchange = () => person.height.in = parseInt(heightInputIn.value);
-	form.appendChild(heightInputIn);
-	var heightLabelIn = document.createElement('LABEL');
-	heightLabelIn.className += ' unit';
-	heightLabelIn.innerHTML = `&nbsp;in.`;
-	form.appendChild(heightLabelIn);
-	var heightNote = document.createElement('SMALL');
-	heightNote.innerHTML = '';
-	form.appendChild(heightNote);
-	form.appendChild(document.createElement('BR'));
-	form.appendChild(document.createElement('BR'));
-
-	// Weight
-	var weightEl = createFormElement('weight', 'Weight (lbs):', 'number', person.weight);
-	weightEl.input.onchange = () => person.weight = parseInt(weightEl.input.value);
-	weightEl.input.setAttribute('id','weightInput')
-	weightEl.input.setAttribute('min',0);
-	weightEl.input.setAttribute('max',9999);
-	weightEl.input.required = true;
-	appendFormElement(weightEl);
-
-	var suicideEl = createFormElement('suicide', 'Past suicide attempt(s):', 'checkbox', '');
-	suicideEl.input.checked = person.suicide;
-	suicideEl.input.onchange = () => person.suicide = suicideEl.input.checked;
-	appendFormElement(suicideEl);
-
-	var listsTableWrapper = document.createElement('DIV');
-	listsTableWrapper.className += ' tableWrapper';
-	var listsTable = document.createElement('TABLE');
-	listsTable.setAttribute('id','listsTable');
-	var listsTbody = document.createElement('TBODY');
-	// Allergies
-	var allergyEl = createFormElement('allergies', 'Allergies (comma-separated):', 'allergies', decodeStr(person.allergies.join()));
-	allergyEl.input.onchange = () => {
-		var allergies = myTrim(allergyEl.input.value,'[\\s,]').split(',');
+	setFormElement('name', decodeStr(person.name), () => person.name = encodeStr(document.getElementById('name').value));
+	setFormElement('dob', `${person.DOB.yr}-${person.DOB.mo}-${person.DOB.da}`, () => {
+		var dobArr = document.getElementById('dob').value.split('-');
+		person.DOB = { yr: dobArr[0], mo: dobArr[1], da: dobArr[2] };
+	});
+	setFormElement('blood', person.blood, () => {
+		document.getElementById('blood').value = document.getElementById('blood').value.toUpperCase();
+		person.blood = document.getElementById('blood').value;
+	});
+	setFormElement('heightFt', person.height.ft, () => person.height.ft = parseInt(document.getElementById('heightFt').value));
+	setFormElement('heightIn', person.height.in, () => person.height.in = parseInt(document.getElementById('heightIn').value));
+	setFormElement('weight', person.weight, () => person.weight = parseInt(document.getElementById('weight').value));
+	setFormElement('suicide', person.suicide, () => person.suicide = document.getElementById('suicide').checked);
+	setFormElement('allergies', decodeStr(person.allergies.join()), () => {
+		let allergies = myTrim(document.getElementById('allergies').value,'[\\s,]').split(',');
 		for (let i=0; i<allergies.length; i++) {
 			allergies[i] = encodeStr(allergies[i]);
 		}
 		if (allergies.length==1 && allergies[0]=='') allergies = [];
 		person.allergies = allergies;
-	};
-	allergyEl.input.className += ' list';
-	var allergyTR = document.createElement('TR');
-	var allergyLabelTD = document.createElement('TD');
-	allergyLabelTD.setAttribute('id','allergyLabelTD');
-	allergyLabelTD.appendChild(allergyEl.label);
-	allergyTR.appendChild(allergyLabelTD);
-	var allergyInputTD = document.createElement('TD');
-	allergyInputTD.appendChild(allergyEl.input);
-	allergyTR.appendChild(allergyInputTD);
-	listsTbody.appendChild(allergyTR);
-
-	// Addictions
-	var addictionEl = createFormElement('addictions', 'Addictions (comma-separated):', 'addictions', decodeStr(person.addictions.join()));
-	addictionEl.input.onchange = () => {
-		var addictions = myTrim(addictionEl.input.value,'[\\s,]').split(',');
+	});
+	setFormElement('addictions', decodeStr(person.addictions.join()), () => {
+		let addictions = myTrim(document.getElementById('addictions').value,'[\\s,]').split(',');
 		for (let i=0; i<addictions.length; i++) {
 			addictions[i] = encodeStr(addictions[i]);
 		}
 		if (addictions.length==1 && addictions[0]=='') addictions = [];
 		person.addictions = addictions;
-	};
-	addictionEl.input.className += ' list';
-	addictionTR = document.createElement('TR');
-	var addictionLabelTD = document.createElement('TD');
-	addictionLabelTD.setAttribute('id','addictionLabelTD');
-	addictionLabelTD.appendChild(addictionEl.label);
-	addictionTR.appendChild(addictionLabelTD);
-	var addictionInputTD = document.createElement('TD');
-	addictionInputTD.appendChild(addictionEl.input);
-	addictionTR.appendChild(addictionInputTD);
-	listsTbody.appendChild(addictionTR);
+	});
 
-	listsTable.appendChild(listsTbody);
-	listsTableWrapper.appendChild(listsTable);
-	form.appendChild(listsTableWrapper);
-	form.appendChild(createSpacer());
 
-	// Medications
-	var medsLabel = document.createElement('LABEL');
-	medsLabel.className += ' tableLabel';
-	medsLabel.innerHTML = 'Medications:';
-	form.appendChild(medsLabel);
-	form.appendChild(document.createElement('BR'));
-	var medsTable = person.getMedsTable();
-	form.appendChild(medsTable);
+	document.getElementById('medicationsTableWrapper').innerHTML = '';
+	document.getElementById('medicationsTableWrapper').appendChild(person.getMedsTable());
 
-	// Conditions
-	form.appendChild(createSpacer());
-	var condsLabel = document.createElement('LABEL');
-	condsLabel.className += ' tableLabel';
-	condsLabel.innerHTML = 'Medical Conditions:';
-	form.appendChild(condsLabel);
-	form.appendChild(document.createElement('BR'));
-	var condsTable = person.getConditionsTable();
-	form.appendChild(condsTable);
+	document.getElementById('conditionsTableWrapper').innerHTML = '';
+	document.getElementById('conditionsTableWrapper').appendChild(person.getConditionsTable());
 
-	// Contacts
-	form.appendChild(createSpacer());
-	var contsLabel = document.createElement('LABEL');
-	contsLabel.className += ' tableLabel';
-	contsLabel.innerHTML = 'Emergency Contacts:';
-	form.appendChild(contsLabel);
-	form.appendChild(document.createElement('BR'));
-	var contsTable = person.getContactsTable();
-	form.appendChild(contsTable);
-	form.appendChild(createSpacer());
+	document.getElementById('contactsTableWrapper').innerHTML = '';
+	document.getElementById('contactsTableWrapper').appendChild(person.getContactsTable());
 }
 
 // Initialize Person from URL
@@ -203,23 +62,17 @@ if (window.location.href.includes('/?')) {
 }
 
 updateForm();
-MAIN_DIV.appendChild(form);
-MAIN_DIV.appendChild(createSpacer());
 
 // Set up QR code
 var qrDiv = document.getElementById('qrcode');
-var qrSize = 128;//Math.round(5/2.54*dpi);
-var qrcode = new QRCode(qrDiv, {
-	width:qrSize,
-	height:qrSize
-});
-var firstTime = true;
+var qrcode = new QRCode(qrDiv);
 
 // Add generate button to HTML
-var errorDiv = document.createElement('DIV');
-var generateButton = document.createElement('INPUT');
-generateButton.setAttribute('type','button');
-generateButton.setAttribute('value','Generate Emergency QR Code');
+var errorDiv = document.getElementById('errorDiv');
+var generateButton = document.getElementById('generate');
+var printButtonWrapper = document.getElementById('printButtonWrapper');
+var printButton = document.getElementById('print');
+var code;
 generateButton.onclick = function() {
 	errorDiv.innerHTML='';
 	qrcode.clear();
@@ -228,36 +81,26 @@ generateButton.onclick = function() {
 		// Generate QR code
 		qrDiv.style.display = 'initial';
 		errorDiv.innerHTML='';
-		//var code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + valResult.encoding;
-		var code = 'https://rupumped.github.io/EQR/?' + valResult.encoding;
+		//code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + valResult.encoding;
+		code = 'https://rupumped.github.io/EQR/?' + valResult.encoding;
 		console.log(code);
 		qrcode.makeCode(code);
 
 		// Add "Print" button
-		if (firstTime) {
-			var printButton = document.createElement('INPUT');
-			printButton.className += ' bigButton';
-			printButton.setAttribute('type','button');
-			printButton.setAttribute('value','Get Printable Version');
-			printButton.onclick = () => {
-				document.body.innerHTML = '';
-				document.body.style.backgroundColor = 'white';
-				document.body.style.color = 'black';
-				var walletCardV = document.createElement('DIV');
-				walletCardV.setAttribute('id','walletCardV');
+		printButtonWrapper.style.display = 'initial';
+		printButton.onclick = () => {
+			document.getElementById('wrapper').style.display = 'none';
+			document.getElementById('printPageWrapper').style.display = 'initial';
 
-				var walletCardText = document.createElement('P');
-				walletCardText.innerHTML = 'EMERGENCY MEDICAL INFORMATION<br><br>SCAN ME';
-				walletCardText.className += ' walletText';
-				walletCardV.appendChild(walletCardText);
+			var qrImgV = qrDiv.children[1].cloneNode(true);
+			qrImgV.setAttribute('id','qrImgV');
+			document.getElementById('walletCardV').appendChild(qrImgV);
 
-				walletCardV.appendChild(qrDiv);
-				document.body.appendChild(walletCardV);
-			};
-			MAIN_DIV.appendChild(createSpacer());
-			MAIN_DIV.appendChild(printButton);
+			var qrImgH = qrDiv.children[1].cloneNode(true);
+			qrImgH.setAttribute('id','qrImgH');
+			document.getElementById('walletTextH').appendChild(qrImgH);
+			document.getElementById('walletTextH').innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
 		}
-		firstTime = false;
 	} else {
 		qrDiv.style.display = 'none';
 		errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
@@ -271,10 +114,8 @@ generateButton.onclick = function() {
 		errorDiv.appendChild(document.createTextNode('Please fix the above errors and try again.'))
 	}
 };
-generateButton.className += ' bigButton';
-MAIN_DIV.appendChild(generateButton);
-MAIN_DIV.appendChild(document.createElement('BR'));
-MAIN_DIV.appendChild(document.createElement('BR'));
-MAIN_DIV.appendChild(errorDiv);
-MAIN_DIV.removeChild(qrDiv);
-MAIN_DIV.appendChild(qrDiv);
+
+var returnButton = document.getElementById('return');
+returnButton.onclick = function() {
+	window.location.href = code;
+}

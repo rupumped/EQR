@@ -22,17 +22,76 @@
 
 <body>
 	<div id='testdiv' style='height: 1in; left: -100%; position: absolute; top: -100%; width: 1in;'></div>
-	<div id="wrapper">
-		<div id="header">
-			<div id="title">Emergency Medical Information</div>
-			<div id="help">
-				<a href="https://github.com/rupumped/EQR/blob/gh-pages/README.md"><img src="https://rupumped.github.io/EQR/icon_help.png" alt="help"></a>
+	<div id="mainPage">
+		<div id="wrapper">
+			<div id="header">
+				<div id="title">Emergency Medical Information</div>
+				<div id="help">
+					<a href="https://github.com/rupumped/EQR/blob/gh-pages/README.md"><img src="https://rupumped.github.io/EQR/icon_help.png" alt="help"></a>
+				</div>
+			</div>
+			<div id="subwrapper">
+				<div id="mainDiv">
+					<form>
+						<label for="name">Full Name:</label>
+						<input type="text" name="name" id="name" required><br>
+						<br>
+						<label for="dob">Date of Birth:</label>
+						<input type="date" name="dob" id="dob" required><br>
+						<br>
+						<label for="blood">Blood Type:</label>
+						<input type="text" name="blood" id="blood" pattern="(A|B|AB|O)[+-]" required><br>
+						<br>
+						<label>Height:</label>
+						<input type="number" name="heightFt" id="heightFt" min="0" max="9" required>
+						<label class="unit">&nbsp;ft.&nbsp;&nbsp;</label>
+						<input type="number" name="heightIn" id="heightIn" min="0" max="11" required>
+						<label class="unit">&nbsp;in.</label><br>
+						<br>
+						<label for="weight">Weight (lbs.):</label>
+						<input type="number" name="weight" id="weight" min="0" max="9999" required><br>
+						<br>
+						<label for="suicide">Past suicide attempt(s):</label>
+						<input type="checkbox" name="suicide" id="suicide"><br>
+						<br>
+						<label for="allergies">Allergies (comma-separated):</label><br>
+						<input type="text" name="allergies" id="allergies" class="list"><br>
+						<br>
+						<label for="addictions">Addictions (comma-separated):</label><br>
+						<input type="text" name="addictions" id="addictions" class="list"><br>
+						<br>
+						<label class="tableLabel">Medications:</label><br>
+						<div id="medicationsTableWrapper" class="tableWrapper"></div>
+						<div class="spacer"></div>
+						<label class="tableLabel">Medical Conditions:</label><br>
+						<div id="conditionsTableWrapper" class="tableWrapper"></div>
+						<div class="spacer"></div>
+						<label class="tableLabel">Emergency Contacts:</label><br>
+						<div id="contactsTableWrapper" class="tableWrapper"></div>
+						<div class="spacer"></div>
+						<input type="button" name="generate" id="generate" class="bigButton" value="Generate Emergency QR Code">
+					</form>
+					<div class="spacer"></div>
+					<div id="errorDiv"></div>
+					<div id="qrcode" style="display: none;"></div>
+					<div class="spacer"></div>
+					<div id="printButtonWrapper" style="display: none;">
+						<input type="button" name="print" id="print" class="bigButton" value="Print EQR Code">
+					</div>
+				</div>
 			</div>
 		</div>
-		<div id="subwrapper">
-			<div id="mainDiv">
-				<div id="qrcode"></div>
-			</div>
+	</div>
+	
+	<div id="printPageWrapper" style="display: none;">
+		<input type="button" name="return" id="return" class="bigButton" value="Return to EQR Creator"><br>
+		<div class="spacer"></div>
+		<div id="walletCardV">
+			<p class="walletText" id="walletTextV">EMERGENCY MEDICAL INFORMATION<br><br>↓ SCAN ME ↓</p>
+		</div>
+		<div class="h-spacer"></div>
+		<div id="walletCardH">
+			<p class="walletText" id="walletTextH"></p>
 		</div>
 	</div>
 </body>
