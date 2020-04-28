@@ -1,3 +1,7 @@
+const DEFAULT_ENCODING = '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
+//const BASE_URL = 'https://rupumped.github.io/EQR/';
+const BASE_URL = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/';
+
 // Get screen DPI
 var devicePixelRatio = 1;//window.devicePixelRatio || 1;
 var dpi_x = document.getElementById('testdiv').offsetWidth * devicePixelRatio;
@@ -56,67 +60,76 @@ function updateForm() {
 // Initialize Person from URL
 var person;
 if (window.location.href.includes('/?')) {
-	person = new Person(updateForm, window.location.href);
+	try {
+		person = new Person(updateForm, window.location.href);
+	} catch (error) {
+		document.getElementById('mainDiv').style.display = 'none';
+		document.getElementById('backup').style.display = 'block';
+		document.getElementById('goHome').onclick = () => window.location.href = BASE_URL;
+	}
 } else {
-	person = new Person(updateForm, '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=')
+	person = new Person(updateForm, DEFAULT_ENCODING)
 }
 
-updateForm();
+if (person) {
+	updateForm();
 
-// Set up QR code
-var qrDiv = document.getElementById('qrcode');
-var qrcode = new QRCode(qrDiv);
+	// Set up QR code
+	var qrDiv = document.getElementById('qrcode');
+	var qrcode = new QRCode(qrDiv);
 
-// Add generate button to HTML
-var errorDiv = document.getElementById('errorDiv');
-var generateButton = document.getElementById('generate');
-var printButtonWrapper = document.getElementById('printButtonWrapper');
-var printButton = document.getElementById('print');
-var code;
-generateButton.onclick = function() {
-	errorDiv.innerHTML='';
-	qrcode.clear();
-	var valResult = person.validate();
-	if (valResult.result) {
-		// Generate QR code
-		qrDiv.style.display = 'initial';
+	// Add generate button to HTML
+	var errorDiv = document.getElementById('errorDiv');
+	var generateButton = document.getElementById('generate');
+	var printButtonWrapper = document.getElementById('printButtonWrapper');
+	var printButton = document.getElementById('print');
+	var code;
+	generateButton.onclick = function() {
 		errorDiv.innerHTML='';
-		//code = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/?' + valResult.encoding;
-		code = 'https://rupumped.github.io/EQR/?' + valResult.encoding;
-		console.log(code);
-		qrcode.makeCode(code);
+		qrcode.clear();
+		var valResult = person.validate();
+		if (valResult.result) {
+			// Generate QR code
+			qrDiv.style.display = 'initial';
+			errorDiv.innerHTML='';
 
-		// Add "Print" button
-		printButtonWrapper.style.display = 'initial';
-		printButton.onclick = () => {
-			document.getElementById('wrapper').style.display = 'none';
-			document.getElementById('printPageWrapper').style.display = 'initial';
-			document.body.style.backgroundColor = 'white';
+			code = BASE_URL + '?' + valResult.encoding;
+			console.log(code);
+			qrcode.makeCode(code);
 
-			var qrImgV = qrDiv.children[1].cloneNode(true);
-			qrImgV.setAttribute('id','qrImgV');
-			document.getElementById('walletCardV').appendChild(qrImgV);
+			// Add "Print" button
+			printButtonWrapper.style.display = 'initial';
+			printButton.onclick = () => {
+				document.getElementById('wrapper').style.display = 'none';
+				document.getElementById('printPageWrapper').style.display = 'initial';
+				document.body.style.backgroundColor = 'white';
 
-			var qrImgH = qrDiv.children[1].cloneNode(true);
-			qrImgH.setAttribute('id','qrImgH');
-			document.getElementById('walletTextH').appendChild(qrImgH);
-			document.getElementById('walletTextH').innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
-		}
-	} else {
-		qrDiv.style.display = 'none';
-		errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
-		errorDiv.appendChild(document.createElement('BR'));
-		errorDiv.appendChild(document.createElement('BR'));
-		valResult.errors.forEach(msg => {
-			errorDiv.appendChild(document.createTextNode(msg));
+				var qrImgV = qrDiv.children[1].cloneNode(true);
+				qrImgV.setAttribute('id','qrImgV');
+				document.getElementById('walletCardV').appendChild(qrImgV);
+
+				var qrImgH = qrDiv.children[1].cloneNode(true);
+				qrImgH.setAttribute('id','qrImgH');
+				document.getElementById('walletTextH').appendChild(qrImgH);
+				document.getElementById('walletTextH').innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
+			}
+			document.getElementById('download').addEventListener('click', () => { window.location.href = getBase64Image(qrDiv.children[1]).replace(/^data:image\/(png|jpg);base64,/, ''); }, false);
+		} else {
+			qrDiv.style.display = 'none';
+			errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
 			errorDiv.appendChild(document.createElement('BR'));
-		});
-		errorDiv.appendChild(document.createElement('BR'));
-		errorDiv.appendChild(document.createTextNode('Please fix the above errors and try again.'))
-	}
-};
+			errorDiv.appendChild(document.createElement('BR'));
+			valResult.errors.forEach(msg => {
+				errorDiv.appendChild(document.createTextNode(msg));
+				errorDiv.appendChild(document.createElement('BR'));
+			});
+			errorDiv.appendChild(document.createElement('BR'));
+			errorDiv.appendChild(document.createTextNode('Please fix the above errors and try again.'))
+		}
+	};
 
-var returnButton = document.getElementById('return');
-returnButton.onclick = function() {
-	window.location.href = code;
+	var returnButton = document.getElementById('return');
+	returnButton.onclick = function() {
+		window.location.href = code;
+	}
 }

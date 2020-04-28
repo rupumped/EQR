@@ -132,7 +132,7 @@ table input.add {
 	padding-bottom: 5%;
 	font-size: var(--header-font-size);
 }
-#mainDiv {
+.bigDiv {
 	padding: 4%;
 }
 #printPageWrapper {

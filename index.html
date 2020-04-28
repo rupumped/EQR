@@ -15,6 +15,7 @@
 	<script type="text/javascript" src="https://cdn.rawgit.com/KeeeX/qrcodejs/master/qrcode.min.js"></script>
 
 	<!-- Internal Imports -->
+	<script src="https://rupumped.github.io/EQR/getBase64Image.js"></script>
 	<script src="https://rupumped.github.io/EQR/myTrim.js"></script>
 	<script src="https://rupumped.github.io/EQR/pad.js"></script>
 	<script src="https://rupumped.github.io/EQR/Person.js"></script>
@@ -31,7 +32,7 @@
 				</div>
 			</div>
 			<div id="subwrapper">
-				<div id="mainDiv">
+				<div id="mainDiv" class="bigDiv">
 					<form>
 						<label for="name">Full Name:</label>
 						<input type="text" name="name" id="name" required><br>
@@ -77,7 +78,14 @@
 					<div class="spacer"></div>
 					<div id="printButtonWrapper" style="display: none;">
 						<input type="button" name="print" id="print" class="bigButton" value="Print EQR Code">
+						<p>OR</p>
+						<a id="download" download="EQR.png"><input type="button" name="download" class="bigButton" value="Download EQR Code"></a>
 					</div>
+				</div>
+				<div id="backup" class="bigDiv" style="display: none;">
+					<p>Error! The URL is invalid. If you got here by scanning an EQR code, the code may be invalid. Please try again.</p>
+					<div class="spacer"></div>
+					<input type="button" name="goHome" id="goHome" class="bigButton" value="Click Here to Generate a New EQR">
 				</div>
 			</div>
 		</div>
