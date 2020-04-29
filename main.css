@@ -16,7 +16,7 @@
 	--add-button-bg-color: rgb(211,211,211);
 	--add-button-border-color: rgb(151,151,151);
 }
-
+ 
 body {
 	background-color: var(--main-bg-color);
 }
