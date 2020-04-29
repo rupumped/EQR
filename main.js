@@ -79,7 +79,11 @@ if (person) {
 	var qrcode = new QRCode(qrDiv);
 
 	// Add generate button to HTML
+	var wrapper = document.getElementById('wrapper');
 	var errorDiv = document.getElementById('errorDiv');
+	var printButtonWrapper = document.getElementById('printButtonWrapper');
+	var downloadPageWrapper = document.getElementById('downloadPageWrapper');
+	var walletTextH = document.getElementById('walletTextH');
 	var code;
 	document.getElementById('generate').onclick = function() {
 		errorDiv.innerHTML='';
@@ -95,9 +99,9 @@ if (person) {
 			qrcode.makeCode(code);
 
 			// Add "Print" button
-			document.getElementById('printButtonWrapper').style.display = 'initial';
+			printButtonWrapper.style.display = 'initial';
 			document.getElementById('print').onclick = () => {
-				document.getElementById('wrapper').style.display = 'none';
+				wrapper.style.display = 'none';
 				document.getElementById('printPageWrapper').style.display = 'initial';
 				document.body.style.backgroundColor = 'white';
 
@@ -107,19 +111,20 @@ if (person) {
 
 				var qrImgH = qrDiv.children[1].cloneNode(true);
 				qrImgH.setAttribute('id','qrImgH');
-				document.getElementById('walletTextH').appendChild(qrImgH);
-				document.getElementById('walletTextH').innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
+				walletTextH.appendChild(qrImgH);
+				walletTextH.innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
 				window.print();
 			}
 			document.getElementById('download').onclick = () => {
-				document.getElementById('wrapper').style.display = 'none';
-				document.getElementById('downloadPageWrapper').style.display = 'initial';
+				wrapper.style.display = 'none';
+				downloadPageWrapper.style.display = 'initial';
 				document.body.style.backgroundColor = 'white';
 
 				var qrImg = qrDiv.children[1].cloneNode(true);
-				document.getElementById('downloadPageWrapper').appendChild(qrImg);
+				downloadPageWrapper.appendChild(qrImg);
 			}
 		} else {
+			printButtonWrapper.style.display = 'none';
 			qrDiv.style.display = 'none';
 			errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
 			errorDiv.appendChild(document.createElement('BR'));
