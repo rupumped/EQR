@@ -131,7 +131,7 @@ header {
 	background-color: var(--accent-bg-color);
 	color: var(--accent-text-color);
 	font-family: var(--accent-font-family);
-	font-weight: 1;
+	font-weight: bold;
 	padding-left: 4%;
 	padding-top: 5%;
 	padding-bottom: 5%;
