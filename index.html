@@ -1,8 +1,16 @@
-<!DOCTYPE html>
-<meta charset="UTF-8">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
 	<title>EQR</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Sometimes people pass out and can't tell the EMT to shoot them with insulin.">
 
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+	</script>
+	<![endif]-->
+	
 	<!-- Fonts -->
 	<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
 	<link href='https://fonts.googleapis.com/css?family=Open Sans Condensed:300' rel='stylesheet'>
@@ -24,13 +32,13 @@
 	<div id='testdiv' style='height: 1in; left: -100%; position: absolute; top: -100%; width: 1in;'></div>
 	<div id="mainPage">
 		<div id="wrapper">
-			<div id="header">
-				<div id="title">Emergency Medical Information</div>
+			<header>
+				<h1>Emergency Medical Information</h1>
 				<div id="help">
 					<a href="https://github.com/rupumped/EQR/blob/gh-pages/README.md"><img src="file:///C:/Users/nick/Documents/GitHub/EQR/icon_help.png" alt="help"></a>
 				</div>
-			</div>
-			<div id="subwrapper">
+			</header>
+			<main id="subwrapper">
 				<div id="mainDiv" class="bigDiv">
 					<form>
 						<label for="name">Full Name:</label>
@@ -86,7 +94,7 @@
 					<div class="spacer"></div>
 					<input type="button" name="goHome" id="goHome" class="bigButton" value="Click Here to Generate a New EQR">
 				</div>
-			</div>
+			</main>
 		</div>
 	</div>
 	

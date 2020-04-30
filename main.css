@@ -16,7 +16,7 @@
 	--add-button-bg-color: rgb(211,211,211);
 	--add-button-border-color: rgb(151,151,151);
 }
- 
+
 body {
 	background-color: var(--main-bg-color);
 }
@@ -127,7 +127,7 @@ p, ol {
 	margin-right: auto ;
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-#header {
+header {
 	background-color: var(--accent-bg-color);
 	color: var(--accent-text-color);
 	font-family: var(--accent-font-family);
@@ -145,7 +145,7 @@ p, ol {
 	color: black;
 }
 
-#title {
+h1 {
 	display: inline-block;
 }
 #help {
