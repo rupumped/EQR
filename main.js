@@ -8,6 +8,20 @@ var dpi_x = document.getElementById('testdiv').offsetWidth * devicePixelRatio;
 var dpi_y = document.getElementById('testdiv').offsetHeight * devicePixelRatio;
 var dpi = (dpi_x+dpi_y)/2;
 
+// Resize Header Font
+var header = document.getElementById('header');
+var headerText = document.getElementById('headerText');
+var help = document.getElementById('help');
+var maxHeaderTextWidth = 0.8*(header.offsetWidth - help.offsetWidth);
+console.log(maxHeaderTextWidth);
+var headerFontSize = 1;
+headerText.style.fontSize = `${headerFontSize}px`;
+
+while (headerText.offsetWidth<maxHeaderTextWidth) {
+	headerText.style.fontSize = `${++headerFontSize}px`;
+}
+headerText.style.fontSize = `${--headerFontSize}px`;
+
 function setFormElement(id, value, onchange) {
 	var el = document.getElementById(id);
 	el.setAttribute('value',value);
