@@ -239,6 +239,10 @@ img {
 	float: left;
 }
 
+footer { /* For some reason, this isn't recognized. */
+	text-align: center;
+}
+
 @media only screen and (max-device-width: 1024px) {
 	:root {
 		--main-font-size: 1rem;
