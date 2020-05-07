@@ -239,8 +239,9 @@ img {
 	float: left;
 }
 
-footer { /* For some reason, this isn't recognized. */
+footer {
 	text-align: center;
+	margin-top: 10px;
 }
 
 @media only screen and (max-device-width: 1024px) {
