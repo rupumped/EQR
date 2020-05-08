@@ -130,14 +130,11 @@ function updateColumnWidths(table) {
 	var targetWidth = 0.95*document.getElementById('form').offsetWidth;
 	if (sumWidth<targetWidth){
 		var splitDiff = (targetWidth-sumWidth)/(hr.children.length-1);
-		console.log(splitDiff)
 		for (let c=1; c<hr.children.length; c++) {
 			hr.children[c].style.width = `${parseInt(hr.children[c].style.width)+splitDiff}px`;
 		}
 		sumWidth = targetWidth;
 	}
-
-	//console.log(targetWidth + ' ' + sumWidth);
 
 	table.style.width = `${sumWidth}px`;
 }
@@ -396,6 +393,7 @@ Person.prototype.getContactsTable = function() {
 		iic[i].push(getInputInCell(thisNumber));
 		iic[i][1].input.pattern='[\\d\\-\\(\\) ]+'
 		iic[i][1].input.oninput = () => {
+			console.log(RegExp(iic[i][1].input.pattern).test(iic[i][1].input.value))
 			this.contacts[i].number = iic[i][1].input.value.match(/\d/g).join('');
 			updateColumnWidths(this.contactsTable);
 		}
