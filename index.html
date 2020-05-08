@@ -33,13 +33,15 @@
 	<script type="text/javascript" src="https://cdn.rawgit.com/KeeeX/qrcodejs/master/qrcode.min.js"></script>
 
 	<!-- Internal Imports -->
+	<script type="text/javascript">const BASE_URL = 'https://rupumped.github.io/EQR/';</script>
 	<script src="https://rupumped.github.io/EQR/myTrim.js"></script>
 	<script src="https://rupumped.github.io/EQR/pad.js"></script>
-	<script src="https://rupumped.github.io/EQR/Person.js"></script>
+	<script src="https://rupumped.github.io/EQR/safelyGetProperty.js"></script>
 </head>
 
 <body>
-	<div id='testdiv' style='height: 1in; left: -100%; position: absolute; top: -100%; width: 1in;'></div>
+	<div id="testem" class="test" style="height: 1em; width: 1em;"></div>
+	<span id="testSpan" class="test" style="height: 1em;"></span>
 	<div id="mainPage">
 		<div id="wrapper">
 			<header id="header">
@@ -50,34 +52,34 @@
 			</header>
 			<main id="subwrapper">
 				<div id="mainDiv" class="bigDiv">
-					<form>
+					<form id="form">
 						<label for="name">Full Name:</label>
 						<input type="text" name="name" id="name" required><br>
-						<br>
+						<div class="spacer"></div>
 						<label for="dob">Date of Birth:</label>
 						<input type="date" name="dob" id="dob" required><br>
-						<br>
+						<div class="spacer"></div>
 						<label for="blood">Blood Type:</label>
 						<input type="text" name="blood" id="blood" pattern="(A|B|AB|O)[+-]" required><br>
-						<br>
+						<div class="spacer"></div>
 						<label>Height:</label>
 						<input type="number" name="heightFt" id="heightFt" min="0" max="9" required>
 						<label class="unit">&nbsp;ft.&nbsp;&nbsp;</label>
 						<input type="number" name="heightIn" id="heightIn" min="0" max="11" required>
 						<label class="unit">&nbsp;in.</label><br>
-						<br>
+						<div class="spacer"></div>
 						<label for="weight">Weight (lbs.):</label>
 						<input type="number" name="weight" id="weight" min="0" max="9999" required><br>
-						<br>
+						<div class="spacer"></div>
 						<label for="suicide">Past suicide attempt(s):</label>
 						<input type="checkbox" name="suicide" id="suicide"><br>
-						<br>
+						<div class="spacer"></div>
 						<label for="allergies">Allergies (comma-separated):</label><br>
 						<input type="text" name="allergies" id="allergies" class="list"><br>
-						<br>
+						<div class="spacer"></div>
 						<label for="addictions">Addictions (comma-separated):</label><br>
 						<input type="text" name="addictions" id="addictions" class="list"><br>
-						<br>
+						<div class="spacer"></div>
 						<label class="tableLabel">Medications:</label><br>
 						<div id="medicationsTableWrapper" class="tableWrapper"></div>
 						<div class="spacer"></div>
@@ -133,10 +135,11 @@
 	</div>
 
 	<footer>
-		Copyright &copy; Nicholas Selby
+		<p>&copy; 2020 Nicholas Selby All Rights Reserved</p>
 	</footer>
 </body>
 
-<script src="https://rupumped.github.io/EQR/main.js"></script> <!-- I would like to move this under Internal Imports -->
+<script src="https://rupumped.github.io/EQR/Person.js"></script>
+<script src="https://rupumped.github.io/EQR/main.js"></script> <!-- I would like to move this under Internal Imports. Nick: You can't. It needs to be below the body so it can access the elements. -->
 
 </html>

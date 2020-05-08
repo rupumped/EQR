@@ -7,6 +7,8 @@ const REGEX = {
 }
 const NAME_ERROR_MSG = ' must only contain English letters, spaces, periods, and hyphens. It cannot be left blank. At this time, we cannot encode other special characters or numbers.';
 const TEXT_ERROR_MSG = ' must only contain English letters, numbers, spaces, periods, and hyphens. It cannot be left blank. At this time, we cannot encode other special characters.';
+const TESTSPAN = document.getElementById('testSpan');
+const EM_SIZE = document.getElementById('testem').offsetWidth;
 
 function Person(update, url) {
 	this.update = update;
@@ -107,14 +109,50 @@ Person.prototype.remove = function(what, index) {
 	this.update();
 }
 
+function getTextWidth(str) {
+	TESTSPAN.innerHTML = `<p>${str}</p>`;
+	return TESTSPAN.offsetWidth;
+}
+
+function updateColumnWidths(table) {
+	var tbody = table.children[0];
+	var hr = tbody.children[0];
+	var sumWidth = safelyGetProperty('--close-button-column-width', {em: EM_SIZE});
+	for (let c=1; c<hr.children.length; c++) {
+		var maxWidth = getTextWidth(hr.children[c].textContent);
+		for (let r=1; r<tbody.children.length-1; r++) {
+			maxWidth = Math.max(maxWidth, getTextWidth(tbody.children[r].children[c].children[0].value));
+		}
+		maxWidth += Math.round(2*safelyGetProperty('--textarea-padding', {em: EM_SIZE}));
+		hr.children[c].style.width = `${maxWidth}px`;
+		sumWidth+= maxWidth;
+	}
+	var targetWidth = 0.95*document.getElementById('form').offsetWidth;
+	if (sumWidth<targetWidth){
+		var splitDiff = (targetWidth-sumWidth)/(hr.children.length-1);
+		console.log(splitDiff)
+		for (let c=1; c<hr.children.length; c++) {
+			hr.children[c].style.width = `${parseInt(hr.children[c].style.width)+splitDiff}px`;
+		}
+		sumWidth = targetWidth;
+	}
+
+	//console.log(targetWidth + ' ' + sumWidth);
+
+	table.style.width = `${sumWidth}px`;
+}
+
 Person.prototype.getMedsTable = function() {
+	// Initialize table and body
 	var thisPerson = this;
 	var tableWrapper = document.createElement('DIV');
 	tableWrapper.className += ' tableWrapper';
 	var medsTable = document.createElement('TABLE');
 	medsTable.setAttribute('id','medicationsTable');
 	var medsTbody = document.createElement('TBODY');
+	this.medsTable = medsTable;
 
+	// Create header row
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
 	td_0_0.className += ' close';
@@ -123,11 +161,9 @@ Person.prototype.getMedsTable = function() {
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
 	var td_0_2 = document.createElement('TH');
-	td_0_2.className += ' col2';
 	td_0_2.appendChild(document.createTextNode('Dosage'));
 	headerTR.appendChild(td_0_2);
 	var td_0_3 = document.createElement('TH');
-	td_0_3.className += ' col3';
 	td_0_3.appendChild(document.createTextNode('Frequency'));
 	headerTR.appendChild(td_0_3);
 	var td_0_4 = document.createElement('TH');
@@ -135,14 +171,16 @@ Person.prototype.getMedsTable = function() {
 	headerTR.appendChild(td_0_4);
 	medsTbody.appendChild(headerTR);
 
+	// Make a new row for each medication
 	var iic = new Array(this.medications.length);
 	for (let i=0; i<this.medications.length; i++) {
 		var tr = document.createElement('TR');
 
+		// Add close button in first column to allow user to remove entry
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
-		closeButton.setAttribute('type','button');
-		closeButton.setAttribute('value','×');
+		closeButton.setAttribute('type','image');
+		closeButton.setAttribute('src',BASE_URL+'close_button.png');
 		closeButton.onclick = function() {
 			thisPerson.remove('medication',i);
 		}
@@ -152,24 +190,37 @@ Person.prototype.getMedsTable = function() {
 
 		iic[i] = [];
 
+		// Add attributes of each entry
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].name)));
-		iic[i][0].input.onchange = () => this.medications[i].name = encodeStr(iic[i][0].input.value);
+		iic[i][0].input.oninput = () => {
+			this.medications[i].name = encodeStr(iic[i][0].input.value);
+			updateColumnWidths(this.medsTable);
+		}
 		iic[i][0].input.required = true;
 		tr.appendChild(iic[i][0].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].dose)));
-		iic[i][1].input.onchange = () => this.medications[i].dose = encodeStr(iic[i][1].input.value);
+		iic[i][1].input.oninput = () => {
+			this.medications[i].dose = encodeStr(iic[i][1].input.value);
+			updateColumnWidths(this.medsTable);
+		}
 		iic[i][1].input.required = true;
 		iic[i][1].input.className += ' short';
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].freq)));
-		iic[i][2].input.onchange = () => this.medications[i].freq = encodeStr(iic[i][2].input.value);
+		iic[i][2].input.oninput = () => {
+			this.medications[i].freq = encodeStr(iic[i][2].input.value);
+			updateColumnWidths(this.medsTable);
+		}
 		iic[i][2].input.required = true;
 		tr.appendChild(iic[i][2].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].reason)));
-		iic[i][3].input.onchange = () => this.medications[i].reason = encodeStr(iic[i][3].input.value);
+		iic[i][3].input.oninput = () => {
+			this.medications[i].reason = encodeStr(iic[i][3].input.value);
+			updateColumnWidths(this.medsTable);
+		}
 		iic[i][3].input.required = true;
 		tr.appendChild(iic[i][3].cell);
 
@@ -180,8 +231,8 @@ Person.prototype.getMedsTable = function() {
 	lastRow.appendChild(document.createElement('TD'));
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
-	addButton.setAttribute('type','button');
-	addButton.setAttribute('value','+');
+	addButton.setAttribute('type','image');
+	addButton.setAttribute('src',BASE_URL+'add_button.png');
 	addButton.onclick = () => {
 		thisPerson.medications.push({name: 'Name', dose: 'Dosage', freq: 'Frequency', reason: 'Reason'});
 		thisPerson.update();
@@ -194,6 +245,7 @@ Person.prototype.getMedsTable = function() {
 
 	medsTable.appendChild(medsTbody);
 	tableWrapper.appendChild(medsTable);
+	updateColumnWidths(this.medsTable);
 	return tableWrapper;
 }
 
@@ -204,13 +256,13 @@ Person.prototype.getConditionsTable = function() {
 	var medsTable = document.createElement('TABLE');
 	medsTable.setAttribute('id','conditionsTable');
 	var medsTbody = document.createElement('TBODY');
+	this.conditionsTable = medsTable;
 
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
 	td_0_0.className += ' close';
 	headerTR.appendChild(td_0_0);
 	var td_0_1 = document.createElement('TH');
-	td_0_1.className += ' col1';
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
 	var td_0_2 = document.createElement('TH');
@@ -227,8 +279,8 @@ Person.prototype.getConditionsTable = function() {
 
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
-		closeButton.setAttribute('type','button');
-		closeButton.setAttribute('value','×');
+		closeButton.setAttribute('type','image');
+		closeButton.setAttribute('src',BASE_URL+'close_button.png');
 		closeButton.onclick = function() {
 			thisPerson.remove('condition',i);
 		}
@@ -239,17 +291,26 @@ Person.prototype.getConditionsTable = function() {
 		iic[i] = [];
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].name)));
-		iic[i][0].input.onchange = () => this.conditions[i].name = encodeStr(iic[i][0].input.value);
+		iic[i][0].input.oninput = () => {
+			this.conditions[i].name = encodeStr(iic[i][0].input.value);
+			updateColumnWidths(this.conditionsTable);
+		}
 		iic[i][0].input.required = true;
 		tr.appendChild(iic[i][0].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].effect)));
-		iic[i][1].input.onchange = () => this.conditions[i].effect = encodeStr(iic[i][1].input.value);
+		iic[i][1].input.oninput = () => {
+			this.conditions[i].effect = encodeStr(iic[i][1].input.value);
+			updateColumnWidths(this.conditionsTable);
+		}
 		iic[i][1].input.required = true;
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.conditions[i].relevance)));
-		iic[i][2].input.onchange = () => this.conditions[i].relevance = encodeStr(iic[i][2].input.value);
+		iic[i][2].input.oninput = () => {
+			this.conditions[i].relevance = encodeStr(iic[i][2].input.value);
+			updateColumnWidths(this.conditionsTable);
+		}
 		iic[i][2].input.required = true;
 		iic[i][2].input.className += ' long';
 		tr.appendChild(iic[i][2].cell);
@@ -261,8 +322,8 @@ Person.prototype.getConditionsTable = function() {
 	lastRow.appendChild(document.createElement('TD'));
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
-	addButton.setAttribute('type','button');
-	addButton.setAttribute('value','+');
+	addButton.setAttribute('type','image');
+	addButton.setAttribute('src',BASE_URL+'add_button.png');
 	addButton.onclick = () => {
 		thisPerson.conditions.push({name: 'Name', effect: 'Effect', relevance: 'Relevance'});
 		thisPerson.update();
@@ -275,6 +336,7 @@ Person.prototype.getConditionsTable = function() {
 
 	medsTable.appendChild(medsTbody);
 	tableWrapper.appendChild(medsTable);
+	updateColumnWidths(this.conditionsTable);
 	return tableWrapper;
 }
 
@@ -285,6 +347,7 @@ Person.prototype.getContactsTable = function() {
 	var medsTable = document.createElement('TABLE');
 	medsTable.setAttribute('id','contactsTable');
 	var medsTbody = document.createElement('TBODY');
+	this.contactsTable = medsTable;
 
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
@@ -294,7 +357,6 @@ Person.prototype.getContactsTable = function() {
 	td_0_1.appendChild(document.createTextNode('Name'));
 	headerTR.appendChild(td_0_1);
 	var td_0_2 = document.createElement('TH');
-	td_0_2.className += ' col2';
 	td_0_2.appendChild(document.createTextNode('Phone Number'));
 	headerTR.appendChild(td_0_2);
 	var td_0_3 = document.createElement('TH');
@@ -308,8 +370,8 @@ Person.prototype.getContactsTable = function() {
 
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
-		closeButton.setAttribute('type','button');
-		closeButton.setAttribute('value','×');
+		closeButton.setAttribute('type','image');
+		closeButton.setAttribute('src',BASE_URL+'close_button.png');
 		closeButton.onclick = function() {
 			thisPerson.remove('contact',i);
 		}
@@ -320,7 +382,10 @@ Person.prototype.getContactsTable = function() {
 		iic[i] = [];
 
 		iic[i].push(getInputInCell(decodeStr(this.contacts[i].name)));
-		iic[i][0].input.onchange = () => this.contacts[i].name = encodeStr(iic[i][0].input.value);
+		iic[i][0].input.oninput = () => {
+			this.contacts[i].name = encodeStr(iic[i][0].input.value);
+			updateColumnWidths(this.contactsTable);
+		}
 		iic[i][0].input.required = true;
 		tr.appendChild(iic[i][0].cell);
 
@@ -330,13 +395,19 @@ Person.prototype.getContactsTable = function() {
 		}
 		iic[i].push(getInputInCell(thisNumber));
 		iic[i][1].input.pattern='[\\d\\-\\(\\) ]+'
-		iic[i][1].input.onchange = () => this.contacts[i].number = iic[i][1].input.value.match(/\d/g).join('');
+		iic[i][1].input.oninput = () => {
+			this.contacts[i].number = iic[i][1].input.value.match(/\d/g).join('');
+			updateColumnWidths(this.contactsTable);
+		}
 		iic[i][1].input.required = true;
 		iic[i][1].input.className += ' phone';
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.contacts[i].relation)));
-		iic[i][2].input.onchange = () => this.contacts[i].relation = encodeStr(iic[i][2].input.value);
+		iic[i][2].input.oninput = () => {
+			this.contacts[i].relation = encodeStr(iic[i][2].input.value);
+			updateColumnWidths(this.contactsTable);
+		}
 		iic[i][2].input.required = true;
 		tr.appendChild(iic[i][2].cell);
 
@@ -347,8 +418,8 @@ Person.prototype.getContactsTable = function() {
 	lastRow.appendChild(document.createElement('TD'));
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
-	addButton.setAttribute('type','button');
-	addButton.setAttribute('value','+');
+	addButton.setAttribute('type','image');
+	addButton.setAttribute('src',BASE_URL+'add_button.png');
 	addButton.onclick = () => {
 		thisPerson.contacts.push({name: 'Name', number: '4805551234', relation: 'friend'});
 		thisPerson.update();
@@ -361,6 +432,7 @@ Person.prototype.getContactsTable = function() {
 
 	medsTable.appendChild(medsTbody);
 	tableWrapper.appendChild(medsTable);
+	updateColumnWidths(this.contactsTable);
 	return tableWrapper;
 }
 

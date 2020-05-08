@@ -1,11 +1,4 @@
 const DEFAULT_ENCODING = '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
-const BASE_URL = 'https://rupumped.github.io/EQR/';
-
-// Get screen DPI
-var devicePixelRatio = 1;//window.devicePixelRatio || 1;
-var dpi_x = document.getElementById('testdiv').offsetWidth * devicePixelRatio;
-var dpi_y = document.getElementById('testdiv').offsetHeight * devicePixelRatio;
-var dpi = (dpi_x+dpi_y)/2;
 
 // Resize Header Font
 var header = document.getElementById('header');
@@ -14,7 +7,6 @@ var help = document.getElementById('help');
 var maxHeaderTextWidth = 0.8*(header.offsetWidth - help.offsetWidth);
 var headerFontSize = 1;
 headerText.style.fontSize = `${headerFontSize}px`;
-
 while (headerText.offsetWidth<maxHeaderTextWidth) {
 	headerText.style.fontSize = `${++headerFontSize}px`;
 }
