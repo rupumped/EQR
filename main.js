@@ -1,17 +1,5 @@
 const DEFAULT_ENCODING = '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
 
-// Resize Header Font
-var header = document.getElementById('header');
-var headerText = document.getElementById('headerText');
-var help = document.getElementById('help');
-var maxHeaderTextWidth = 0.8*(header.offsetWidth - help.offsetWidth);
-var headerFontSize = 1;
-headerText.style.fontSize = `${headerFontSize}px`;
-while (headerText.offsetWidth<maxHeaderTextWidth) {
-	headerText.style.fontSize = `${++headerFontSize}px`;
-}
-headerText.style.fontSize = `${--headerFontSize}px`;
-
 function setFormElement(id, value, onchange) {
 	var el = document.getElementById(id);
 	el.setAttribute('value',value);
@@ -145,4 +133,35 @@ if (person) {
 	var returnFn = () => window.location.href = code;
 	document.getElementById('returnFromPrint').onclick = returnFn;
 	document.getElementById('returnFromDownload').onclick = returnFn;
+}
+
+
+function fit2page(evt) {
+	// Resize Header Font
+	var header = document.getElementById('header');
+	var headerText = document.getElementById('headerText');
+	var help = document.getElementById('help');
+	var maxHeaderTextWidth = 0.8*(header.offsetWidth - help.offsetWidth);
+	var headerFontSize = 1;
+	headerText.style.fontSize = `${headerFontSize}px`;
+	while (headerText.offsetWidth<maxHeaderTextWidth) {
+		headerText.style.fontSize = `${++headerFontSize}px`;
+	}
+	headerText.style.fontSize = `${--headerFontSize}px`;
+}
+
+// Cross-platform post-load script from https://stackoverflow.com/questions/807878/how-to-make-javascript-execute-after-page-load
+if(window.attachEvent) {
+    window.attachEvent('onload', fit2page);
+} else {
+    if(window.onload) {
+        var curronload = window.onload;
+        var newonload = function(evt) {
+            curronload(evt);
+            fit2page(evt);
+        };
+        window.onload = newonload;
+    } else {
+        window.onload = fit2page;
+    }
 }

@@ -114,6 +114,7 @@ input.list {
 	font-weight: bold;
 	padding: 0.6em 3em;
 	width: 22em;
+	max-width: 100%;
 }
 
 #name {

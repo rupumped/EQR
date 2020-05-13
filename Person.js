@@ -9,6 +9,7 @@ const NAME_ERROR_MSG = ' must only contain English letters, spaces, periods, and
 const TEXT_ERROR_MSG = ' must only contain English letters, numbers, spaces, periods, and hyphens. It cannot be left blank. At this time, we cannot encode other special characters.';
 const TESTSPAN = document.getElementById('testSpan');
 const EM_SIZE = document.getElementById('testem').offsetWidth;
+const TEST_TABLE_INPUT = document.getElementById('testTableInput');
 
 function Person(update, url) {
 	this.update = update;
@@ -117,26 +118,31 @@ function getTextWidth(str) {
 function updateColumnWidths(table) {
 	var tbody = table.children[0];
 	var hr = tbody.children[0];
-	var sumWidth = safelyGetProperty('--close-button-column-width', {em: EM_SIZE});
+	var sumWidth = document.getElementById('testCloseButton').offsetWidth;
 	for (let c=1; c<hr.children.length; c++) {
 		var maxWidth = getTextWidth(hr.children[c].textContent);
 		for (let r=1; r<tbody.children.length-1; r++) {
 			maxWidth = Math.max(maxWidth, getTextWidth(tbody.children[r].children[c].children[0].value));
 		}
+		//	console.log(maxWidth);
 		maxWidth += Math.round(2*safelyGetProperty('--textarea-padding', {em: EM_SIZE}));
 		hr.children[c].style.width = `${maxWidth}px`;
-		sumWidth+= maxWidth;
+		TEST_TABLE_INPUT.innerHTML = '';
+		TEST_TABLE_INPUT.appendChild(hr.children[c].cloneNode(true));
+		sumWidth+= TEST_TABLE_INPUT.offsetWidth;
 	}
-	var targetWidth = 0.95*document.getElementById('form').offsetWidth;
+	var targetWidth = document.getElementById('form').offsetWidth;
+	//console.log(targetWidth)
 	if (sumWidth<targetWidth){
-		var splitDiff = (targetWidth-sumWidth)/(hr.children.length-1);
+		var splitDiff = Math.floor((targetWidth-sumWidth)/(hr.children.length-1))-1;
+		//console.log(splitDiff)
 		for (let c=1; c<hr.children.length; c++) {
 			hr.children[c].style.width = `${parseInt(hr.children[c].style.width)+splitDiff}px`;
 		}
 		sumWidth = targetWidth;
 	}
 
-	table.style.width = `${sumWidth}px`;
+	//table.style.width = `${sumWidth}px`;
 }
 
 Person.prototype.getMedsTable = function() {
