@@ -71,6 +71,18 @@ h1 {
 	width: auto;
 	height: auto;
 }
+#help div {
+	display: none;
+}
+#help:hover div {
+	display: block;
+	background-color: #FFFFFF;
+	color: #000000;
+	text-decoration: none;
+	float: right;
+	padding: 10%;
+	transform: translateX(5%);
+}
 
 .spacer {
 	height: 2em;
