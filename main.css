@@ -238,6 +238,7 @@ img {
 footer {
 	text-align: center;
 	font-family: var(--main-font-family);
+	clear: both;
 }
 
 @media only screen and (max-device-width: 1024px) {
@@ -263,5 +264,9 @@ footer {
 @media print {
 	#returnFromPrint {
 		display: none;
+	}
+
+	footer {
+		padding-top: 1cm;
 	}
 }
