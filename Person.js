@@ -112,44 +112,44 @@ Person.prototype.remove = function(what, index) {
 
 function getTextWidth(str) {
 	TESTSPAN.innerHTML = `<p>${str}</p>`;
-	return TESTSPAN.offsetWidth;
+	return TESTSPAN.offsetWidth+EM_SIZE;
 }
 
 function updateColumnWidths(table) {
 	var tbody = table.children[0];
 	var hr = tbody.children[0];
-	var sumWidth = document.getElementById('testCloseButton').offsetWidth;
-	for (let c=1; c<hr.children.length; c++) {
-		var maxWidth = getTextWidth(hr.children[c].textContent);
-		for (let r=1; r<tbody.children.length-1; r++) {
-			maxWidth = Math.max(maxWidth, getTextWidth(tbody.children[r].children[c].children[0].value));
+	hr.children[0].style.width = `${document.getElementById('testCloseButton').offsetWidth}px`;				// Set width of first column to be that of the close button.
+	var sumWidth = document.getElementById('testCloseButton').offsetWidth;									// Initialize sumWidth using the width of the first column.
+	for (let c=1; c<hr.children.length; c++) {																// For each remaining column in the table:
+		var maxWidth = getTextWidth(hr.children[c].textContent);											// Initialize maxWidth with the width of the header row element in this column
+		for (let r=1; r<tbody.children.length-1; r++) {														// For each remaining row until the last:
+			maxWidth = Math.max(maxWidth, getTextWidth(tbody.children[r].children[c].children[0].value));	// Reset the maxWidth if the width of the text in this row is greater than the current maxWidth.
 		}
-		//	console.log(maxWidth);
-		maxWidth += Math.round(2*safelyGetProperty('--textarea-padding', {em: EM_SIZE}));
 		hr.children[c].style.width = `${maxWidth}px`;
-		TEST_TABLE_INPUT.innerHTML = '';
-		TEST_TABLE_INPUT.appendChild(hr.children[c].cloneNode(true));
-		sumWidth+= TEST_TABLE_INPUT.offsetWidth;
+
+		sumWidth+= maxWidth;
 	}
-	var targetWidth = document.getElementById('form').offsetWidth;
-	//console.log(targetWidth)
+	var targetWidth = document.getElementById('form').offsetWidth-1;
 	if (sumWidth<targetWidth){
-		var splitDiff = Math.floor((targetWidth-sumWidth)/(hr.children.length-1))-1;
-		//console.log(splitDiff)
+		var splitDiff = Math.floor((targetWidth-sumWidth)/(hr.children.length-1));
+		sumWidth = parseInt(hr.children[0].style.width);
 		for (let c=1; c<hr.children.length; c++) {
+			sumWidth+= parseInt(hr.children[c].style.width)+splitDiff;
 			hr.children[c].style.width = `${parseInt(hr.children[c].style.width)+splitDiff}px`;
 		}
+		hr.children[hr.children.length-1].style.width = `${parseInt(hr.children[hr.children.length-1].style.width)+targetWidth-sumWidth}px`;
 		sumWidth = targetWidth;
+		table.style.tableLayout = 'auto';
+	} else {
+		table.style.tableLayout = 'fixed';
 	}
 
-	//table.style.width = `${sumWidth}px`;
+	table.style.width = `${sumWidth}px`;
 }
 
 Person.prototype.getMedsTable = function() {
 	// Initialize table and body
 	var thisPerson = this;
-	var tableWrapper = document.createElement('DIV');
-	tableWrapper.className += ' tableWrapper';
 	var medsTable = document.createElement('TABLE');
 	medsTable.setAttribute('id','medicationsTable');
 	var medsTbody = document.createElement('TBODY');
@@ -158,7 +158,6 @@ Person.prototype.getMedsTable = function() {
 	// Create header row
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
-	td_0_0.className += ' close';
 	headerTR.appendChild(td_0_0);
 	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
@@ -208,7 +207,6 @@ Person.prototype.getMedsTable = function() {
 			updateColumnWidths(this.medsTable);
 		}
 		iic[i][1].input.required = true;
-		iic[i][1].input.className += ' short';
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.medications[i].freq)));
@@ -247,15 +245,12 @@ Person.prototype.getMedsTable = function() {
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
-	tableWrapper.appendChild(medsTable);
 	updateColumnWidths(this.medsTable);
-	return tableWrapper;
+	return medsTable;
 }
 
 Person.prototype.getConditionsTable = function() {
 	var thisPerson = this;
-	var tableWrapper = document.createElement('DIV');
-	tableWrapper.className += ' tableWrapper';
 	var medsTable = document.createElement('TABLE');
 	medsTable.setAttribute('id','conditionsTable');
 	var medsTbody = document.createElement('TBODY');
@@ -263,7 +258,6 @@ Person.prototype.getConditionsTable = function() {
 
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
-	td_0_0.className += ' close';
 	headerTR.appendChild(td_0_0);
 	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
@@ -315,7 +309,6 @@ Person.prototype.getConditionsTable = function() {
 			updateColumnWidths(this.conditionsTable);
 		}
 		iic[i][2].input.required = true;
-		iic[i][2].input.className += ' long';
 		tr.appendChild(iic[i][2].cell);
 
 		medsTbody.appendChild(tr);
@@ -338,15 +331,12 @@ Person.prototype.getConditionsTable = function() {
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
-	tableWrapper.appendChild(medsTable);
 	updateColumnWidths(this.conditionsTable);
-	return tableWrapper;
+	return medsTable;
 }
 
 Person.prototype.getContactsTable = function() {
 	var thisPerson = this;
-	var tableWrapper = document.createElement('DIV');
-	tableWrapper.className += ' tableWrapper';
 	var medsTable = document.createElement('TABLE');
 	medsTable.setAttribute('id','contactsTable');
 	var medsTbody = document.createElement('TBODY');
@@ -354,7 +344,6 @@ Person.prototype.getContactsTable = function() {
 
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
-	td_0_0.className += ' close';
 	headerTR.appendChild(td_0_0);
 	var td_0_1 = document.createElement('TH');
 	td_0_1.appendChild(document.createTextNode('Name'));
@@ -404,7 +393,6 @@ Person.prototype.getContactsTable = function() {
 			updateColumnWidths(this.contactsTable);
 		}
 		iic[i][1].input.required = true;
-		iic[i][1].input.className += ' phone';
 		tr.appendChild(iic[i][1].cell);
 
 		iic[i].push(getInputInCell(decodeStr(this.contacts[i].relation)));
@@ -435,9 +423,8 @@ Person.prototype.getContactsTable = function() {
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
-	tableWrapper.appendChild(medsTable);
 	updateColumnWidths(this.contactsTable);
-	return tableWrapper;
+	return medsTable;
 }
 
 Person.prototype.validate = function() {
