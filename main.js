@@ -40,13 +40,19 @@ function updateForm() {
 
 
 	document.getElementById('medicationsTableWrapper').innerHTML = '';
-	document.getElementById('medicationsTableWrapper').appendChild(person.getMedsTable());
+	document.getElementById('medicationsTableWrapper').appendChild(person.getTable(
+		[ {title: 'Name', fieldname: 'name'}, {title: 'Dosage', fieldname: 'dose'}, {title: 'Frequency', fieldname: 'freq'}, {title: 'Reason', fieldname: 'reason'} ],
+		person.medications));
 
 	document.getElementById('conditionsTableWrapper').innerHTML = '';
-	document.getElementById('conditionsTableWrapper').appendChild(person.getConditionsTable());
+	document.getElementById('conditionsTableWrapper').appendChild(person.getTable(
+		[ {title: 'Name', fieldname: 'name'}, {title: 'Symptoms', fieldname: 'effect'}, {title: 'Relevance During Emergency', fieldname: 'relevance'} ],
+		person.conditions));
 
 	document.getElementById('contactsTableWrapper').innerHTML = '';
-	document.getElementById('contactsTableWrapper').appendChild(person.getContactsTable());
+	document.getElementById('contactsTableWrapper').appendChild(person.getTable(
+		[ {title: 'Name', fieldname: 'name'}, {title: 'Phone Number', fieldname: 'number'}, {title: 'Relationship', fieldname: 'relation'} ],
+		person.contacts));
 }
 
 // Initialize Person from URL
@@ -165,3 +171,5 @@ if(window.attachEvent) {
         window.onload = fit2page;
     }
 }
+window.addEventListener('resize', fit2page);
+window.addEventListener('orientationchange', fit2page);

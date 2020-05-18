@@ -93,23 +93,6 @@ Person.prototype.encode = function() {
 	return str;
 }
 
-Person.prototype.remove = function(what, index) {
-	switch (what) {
-		case 'medication':
-			this.medications.splice(index, 1);
-			break;
-		case 'condition':
-			this.conditions.splice(index, 1);
-			break;
-		case 'contact':
-			this.contacts.splice(index, 1);
-			break;
-		default:
-			alert('Error: What should I remove?');
-	}
-	this.update();
-}
-
 function getTextWidth(str) {
 	TESTSPAN.innerHTML = `<p>${str}</p>`;
 	return TESTSPAN.offsetWidth+EM_SIZE;
@@ -147,35 +130,35 @@ function updateColumnWidths(table) {
 	table.style.width = `${sumWidth}px`;
 }
 
-Person.prototype.getMedsTable = function() {
+/**
+ * Constructs HTML table for EQR form.
+ *
+ * Builds a medications, conditions, or contacts table for the EQR form.
+ *
+ * @param  {Object[]} cols Array of column objects containing 'title', 'fieldname'
+ * @param  {Object[]} arr  The array to represent in the table. Field names must correspond to the fieldname values in cols.
+ * @return {Object}        HTML table element.
+ */
+Person.prototype.getTable = function(cols, arr) {
 	// Initialize table and body
 	var thisPerson = this;
 	var medsTable = document.createElement('TABLE');
-	medsTable.setAttribute('id','medicationsTable');
 	var medsTbody = document.createElement('TBODY');
-	this.medsTable = medsTable;
-
+	
 	// Create header row
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
 	headerTR.appendChild(td_0_0);
-	var td_0_1 = document.createElement('TH');
-	td_0_1.appendChild(document.createTextNode('Name'));
-	headerTR.appendChild(td_0_1);
-	var td_0_2 = document.createElement('TH');
-	td_0_2.appendChild(document.createTextNode('Dosage'));
-	headerTR.appendChild(td_0_2);
-	var td_0_3 = document.createElement('TH');
-	td_0_3.appendChild(document.createTextNode('Frequency'));
-	headerTR.appendChild(td_0_3);
-	var td_0_4 = document.createElement('TH');
-	td_0_4.appendChild(document.createTextNode('Reason'));
-	headerTR.appendChild(td_0_4);
+	for (let c=0; c<cols.length; c++) {
+		var td = document.createElement('TH');
+		td.appendChild(document.createTextNode(cols[c].title));
+		headerTR.appendChild(td);
+	}
 	medsTbody.appendChild(headerTR);
 
 	// Make a new row for each medication
-	var iic = new Array(this.medications.length);
-	for (let i=0; i<this.medications.length; i++) {
+	var iic = new Array(arr.length);
+	for (let i=0; i<arr.length; i++) {
 		var tr = document.createElement('TR');
 
 		// Add close button in first column to allow user to remove entry
@@ -184,7 +167,8 @@ Person.prototype.getMedsTable = function() {
 		closeButton.setAttribute('type','image');
 		closeButton.setAttribute('src',BASE_URL+'close_button.png');
 		closeButton.onclick = function() {
-			thisPerson.remove('medication',i);
+			arr.splice(i, 1);
+			thisPerson.update();
 		}
 		closeButton.className += ' close';
 		td_0.appendChild(closeButton);
@@ -193,37 +177,28 @@ Person.prototype.getMedsTable = function() {
 		iic[i] = [];
 
 		// Add attributes of each entry
-		iic[i].push(getInputInCell(decodeStr(this.medications[i].name)));
-		iic[i][0].input.oninput = () => {
-			this.medications[i].name = encodeStr(iic[i][0].input.value);
-			updateColumnWidths(this.medsTable);
+		for (let c=0; c<cols.length; c++) {
+			if (cols[c].title === 'Phone Number') {
+				var thisNumber = arr[i][cols[c].fieldname];
+				if (thisNumber.length===10) {
+					thisNumber = `${arr[i][cols[c].fieldname].substring(0,3)}-${arr[i][cols[c].fieldname].substring(3,6)}-${arr[i][cols[c].fieldname].substring(6,10)}`;
+				}
+				iic[i].push(getInputInCell(thisNumber));
+				iic[i][c].input.pattern='[\\d\\-\\(\\) ]+'
+				iic[i][c].input.oninput = () => {
+					arr[i][cols[c].fieldname] = iic[i][c].input.value.match(/\d/g).join('');
+					updateColumnWidths(medsTable);
+				}
+			} else {
+				iic[i].push(getInputInCell(decodeStr(arr[i][cols[c].fieldname])));
+				iic[i][c].input.oninput = () => {
+					arr[i][cols[c]] = encodeStr(iic[i][c].input.value);
+					updateColumnWidths(medsTable);
+				}
+			}
+			iic[i][c].input.required = true;
+			tr.appendChild(iic[i][c].cell);
 		}
-		iic[i][0].input.required = true;
-		tr.appendChild(iic[i][0].cell);
-
-		iic[i].push(getInputInCell(decodeStr(this.medications[i].dose)));
-		iic[i][1].input.oninput = () => {
-			this.medications[i].dose = encodeStr(iic[i][1].input.value);
-			updateColumnWidths(this.medsTable);
-		}
-		iic[i][1].input.required = true;
-		tr.appendChild(iic[i][1].cell);
-
-		iic[i].push(getInputInCell(decodeStr(this.medications[i].freq)));
-		iic[i][2].input.oninput = () => {
-			this.medications[i].freq = encodeStr(iic[i][2].input.value);
-			updateColumnWidths(this.medsTable);
-		}
-		iic[i][2].input.required = true;
-		tr.appendChild(iic[i][2].cell);
-
-		iic[i].push(getInputInCell(decodeStr(this.medications[i].reason)));
-		iic[i][3].input.oninput = () => {
-			this.medications[i].reason = encodeStr(iic[i][3].input.value);
-			updateColumnWidths(this.medsTable);
-		}
-		iic[i][3].input.required = true;
-		tr.appendChild(iic[i][3].cell);
 
 		medsTbody.appendChild(tr);
 	}
@@ -235,7 +210,9 @@ Person.prototype.getMedsTable = function() {
 	addButton.setAttribute('type','image');
 	addButton.setAttribute('src',BASE_URL+'add_button.png');
 	addButton.onclick = () => {
-		thisPerson.medications.push({name: 'Name', dose: 'Dosage', freq: 'Frequency', reason: 'Reason'});
+		var entry = {};
+		cols.forEach(el => entry[el.fieldname] = encodeStr(el.title) );
+		arr.push(entry);
 		thisPerson.update();
 	}
 	addButton.className += ' add';
@@ -245,185 +222,7 @@ Person.prototype.getMedsTable = function() {
 	medsTbody.appendChild(lastRow);
 
 	medsTable.appendChild(medsTbody);
-	updateColumnWidths(this.medsTable);
-	return medsTable;
-}
-
-Person.prototype.getConditionsTable = function() {
-	var thisPerson = this;
-	var medsTable = document.createElement('TABLE');
-	medsTable.setAttribute('id','conditionsTable');
-	var medsTbody = document.createElement('TBODY');
-	this.conditionsTable = medsTable;
-
-	var headerTR = document.createElement('TR');
-	var td_0_0 = document.createElement('TH');
-	headerTR.appendChild(td_0_0);
-	var td_0_1 = document.createElement('TH');
-	td_0_1.appendChild(document.createTextNode('Name'));
-	headerTR.appendChild(td_0_1);
-	var td_0_2 = document.createElement('TH');
-	td_0_2.appendChild(document.createTextNode('Symptoms'));
-	headerTR.appendChild(td_0_2);
-	var td_0_3 = document.createElement('TH');
-	td_0_3.appendChild(document.createTextNode('Relevance during emergency'));
-	headerTR.appendChild(td_0_3);
-	medsTbody.appendChild(headerTR);
-
-	var iic = new Array(this.conditions.length);
-	for (let i=0; i<this.conditions.length; i++) {
-		var tr = document.createElement('TR');
-
-		var td_0 = document.createElement('TD');
-		var closeButton = document.createElement('INPUT');
-		closeButton.setAttribute('type','image');
-		closeButton.setAttribute('src',BASE_URL+'close_button.png');
-		closeButton.onclick = function() {
-			thisPerson.remove('condition',i);
-		}
-		closeButton.className += ' close';
-		td_0.appendChild(closeButton);
-		tr.appendChild(td_0);
-
-		iic[i] = [];
-
-		iic[i].push(getInputInCell(decodeStr(this.conditions[i].name)));
-		iic[i][0].input.oninput = () => {
-			this.conditions[i].name = encodeStr(iic[i][0].input.value);
-			updateColumnWidths(this.conditionsTable);
-		}
-		iic[i][0].input.required = true;
-		tr.appendChild(iic[i][0].cell);
-
-		iic[i].push(getInputInCell(decodeStr(this.conditions[i].effect)));
-		iic[i][1].input.oninput = () => {
-			this.conditions[i].effect = encodeStr(iic[i][1].input.value);
-			updateColumnWidths(this.conditionsTable);
-		}
-		iic[i][1].input.required = true;
-		tr.appendChild(iic[i][1].cell);
-
-		iic[i].push(getInputInCell(decodeStr(this.conditions[i].relevance)));
-		iic[i][2].input.oninput = () => {
-			this.conditions[i].relevance = encodeStr(iic[i][2].input.value);
-			updateColumnWidths(this.conditionsTable);
-		}
-		iic[i][2].input.required = true;
-		tr.appendChild(iic[i][2].cell);
-
-		medsTbody.appendChild(tr);
-	}
-
-	var lastRow = document.createElement('TR');
-	lastRow.appendChild(document.createElement('TD'));
-	var lastCell = document.createElement('TD');
-	var addButton = document.createElement('INPUT');
-	addButton.setAttribute('type','image');
-	addButton.setAttribute('src',BASE_URL+'add_button.png');
-	addButton.onclick = () => {
-		thisPerson.conditions.push({name: 'Name', effect: 'Effect', relevance: 'Relevance'});
-		thisPerson.update();
-	}
-	addButton.className += ' add';
-	lastCell.appendChild(addButton);
-	lastRow.appendChild(lastCell);
-	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
-	medsTbody.appendChild(lastRow);
-
-	medsTable.appendChild(medsTbody);
-	updateColumnWidths(this.conditionsTable);
-	return medsTable;
-}
-
-Person.prototype.getContactsTable = function() {
-	var thisPerson = this;
-	var medsTable = document.createElement('TABLE');
-	medsTable.setAttribute('id','contactsTable');
-	var medsTbody = document.createElement('TBODY');
-	this.contactsTable = medsTable;
-
-	var headerTR = document.createElement('TR');
-	var td_0_0 = document.createElement('TH');
-	headerTR.appendChild(td_0_0);
-	var td_0_1 = document.createElement('TH');
-	td_0_1.appendChild(document.createTextNode('Name'));
-	headerTR.appendChild(td_0_1);
-	var td_0_2 = document.createElement('TH');
-	td_0_2.appendChild(document.createTextNode('Phone Number'));
-	headerTR.appendChild(td_0_2);
-	var td_0_3 = document.createElement('TH');
-	td_0_3.appendChild(document.createTextNode('Relationship'));
-	headerTR.appendChild(td_0_3);
-	medsTbody.appendChild(headerTR);
-
-	var iic = new Array(this.contacts.length);
-	for (let i=0; i<this.contacts.length; i++) {
-		var tr = document.createElement('TR');
-
-		var td_0 = document.createElement('TD');
-		var closeButton = document.createElement('INPUT');
-		closeButton.setAttribute('type','image');
-		closeButton.setAttribute('src',BASE_URL+'close_button.png');
-		closeButton.onclick = function() {
-			thisPerson.remove('contact',i);
-		}
-		closeButton.className += ' close';
-		td_0.appendChild(closeButton);
-		tr.appendChild(td_0);
-
-		iic[i] = [];
-
-		iic[i].push(getInputInCell(decodeStr(this.contacts[i].name)));
-		iic[i][0].input.oninput = () => {
-			this.contacts[i].name = encodeStr(iic[i][0].input.value);
-			updateColumnWidths(this.contactsTable);
-		}
-		iic[i][0].input.required = true;
-		tr.appendChild(iic[i][0].cell);
-
-		var thisNumber = this.contacts[i].number;
-		if (thisNumber.length===10) {
-			thisNumber = `${this.contacts[i].number.substring(0,3)}-${this.contacts[i].number.substring(3,6)}-${this.contacts[i].number.substring(6,10)}`;
-		}
-		iic[i].push(getInputInCell(thisNumber));
-		iic[i][1].input.pattern='[\\d\\-\\(\\) ]+'
-		iic[i][1].input.oninput = () => {
-			console.log(RegExp(iic[i][1].input.pattern).test(iic[i][1].input.value))
-			this.contacts[i].number = iic[i][1].input.value.match(/\d/g).join('');
-			updateColumnWidths(this.contactsTable);
-		}
-		iic[i][1].input.required = true;
-		tr.appendChild(iic[i][1].cell);
-
-		iic[i].push(getInputInCell(decodeStr(this.contacts[i].relation)));
-		iic[i][2].input.oninput = () => {
-			this.contacts[i].relation = encodeStr(iic[i][2].input.value);
-			updateColumnWidths(this.contactsTable);
-		}
-		iic[i][2].input.required = true;
-		tr.appendChild(iic[i][2].cell);
-
-		medsTbody.appendChild(tr);
-	}
-
-	var lastRow = document.createElement('TR');
-	lastRow.appendChild(document.createElement('TD'));
-	var lastCell = document.createElement('TD');
-	var addButton = document.createElement('INPUT');
-	addButton.setAttribute('type','image');
-	addButton.setAttribute('src',BASE_URL+'add_button.png');
-	addButton.onclick = () => {
-		thisPerson.contacts.push({name: 'Name', number: '4805551234', relation: 'friend'});
-		thisPerson.update();
-	}
-	addButton.className += ' add';
-	lastCell.appendChild(addButton);
-	lastRow.appendChild(lastCell);
-	for (let i=0; i<medsTbody.rows[0].cells.length-2; i++) lastRow.appendChild(document.createElement('TD'));
-	medsTbody.appendChild(lastRow);
-
-	medsTable.appendChild(medsTbody);
-	updateColumnWidths(this.contactsTable);
+	updateColumnWidths(medsTable);
 	return medsTable;
 }
 
@@ -516,6 +315,7 @@ Person.prototype.validate = function() {
 		aMatch = med.relevance.match(REGEX.TEXT);
 		if (!aMatch || aMatch.length!==1 || aMatch[0]!==med.relevance) {
 			result = false;
+			console.log(aMatch)
 			errors.push(`Medical Condition #${i+1} relevance "${decodeStr(med.relevance)}"${TEXT_ERROR_MSG}`);
 		}
 	});
