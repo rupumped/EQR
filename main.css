@@ -131,6 +131,8 @@ input.list {
 	padding: 0.6em 3em;
 	width: 22em;
 	max-width: 100%;
+	display: block;
+	margin: auto;
 }
 
 #name {
@@ -193,11 +195,15 @@ p, ol {
 }
 
 #qrcode {
-	width:160px;
-	height:160px;
+	width: 160px;
+	height: 160px;
 }
 img {
 	image-rendering: pixelated;
+}
+
+#printButtonWrapper {
+	text-align: center;
 }
 
 #walletCardV {			/* Wallet Card Dimensions: */
