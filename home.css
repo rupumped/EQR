@@ -1,0 +1,64 @@
+﻿body {
+    background-color: #FFFFFF;
+    margin: 0;
+    font-family: 'Open Sans';
+}
+
+header {
+    background-color: rgb(23,86,187);
+    float: left;
+    width: 100%;
+    height: 100vh;
+}
+    header div {
+        padding-left: 20%;
+        padding-top: 50vh;
+        float: left;
+        color: #FFFFFF;
+    }
+    header img {
+        float: right;
+        width: 55%;
+        height: 100%;
+    }
+
+main {
+    clear: both;
+    text-align: center;
+}
+
+footer {
+    clear: both;
+    text-align: center;
+}
+
+#attributes {
+    margin: 0;
+    clear: both;
+}
+#attributes img {
+    width: 100px;
+}
+#reason_1 {
+    background-color: inherit;
+    float: left;
+    padding-left: 10%;
+    width: 20%;
+}
+#reason_2 {
+    background-color: inherit;
+    padding: 0 10% 0 10%;
+    float: left;
+    width: 20%;
+}
+#reason_3 {
+    background-color: inherit;
+    float: right;
+    padding-right: 10%;
+    width: 20%;
+}
+
+#history {
+    clear: both;
+    background-color: rgb(210,238,249);
+}
