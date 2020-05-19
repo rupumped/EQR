@@ -186,13 +186,16 @@ Person.prototype.getTable = function(cols, arr) {
 				iic[i].push(getInputInCell(thisNumber));
 				iic[i][c].input.pattern='[\\d\\-\\(\\) ]+'
 				iic[i][c].input.oninput = () => {
-					arr[i][cols[c].fieldname] = iic[i][c].input.value.match(/\d/g).join('');
-					updateColumnWidths(medsTable);
+					var newNumber = iic[i][c].input.value.match(/\d/g);
+					if (newNumber) {
+						arr[i][cols[c].fieldname] = newNumber.join('');
+						updateColumnWidths(medsTable);
+					}
 				}
 			} else {
 				iic[i].push(getInputInCell(decodeStr(arr[i][cols[c].fieldname])));
 				iic[i][c].input.oninput = () => {
-					arr[i][cols[c]] = encodeStr(iic[i][c].input.value);
+					arr[i][cols[c].fieldname] = encodeStr(iic[i][c].input.value);
 					updateColumnWidths(medsTable);
 				}
 			}
