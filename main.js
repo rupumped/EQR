@@ -154,6 +154,8 @@ function fit2page(evt) {
 		headerText.style.fontSize = `${++headerFontSize}px`;
 	}
 	headerText.style.fontSize = `${--headerFontSize}px`;
+
+	if (person) updateForm();
 }
 
 // Cross-platform post-load script from https://stackoverflow.com/questions/807878/how-to-make-javascript-execute-after-page-load
@@ -173,3 +175,4 @@ if(window.attachEvent) {
 }
 window.addEventListener('resize', fit2page);
 window.addEventListener('orientationchange', fit2page);
+screen.orientationchange = fit2page;
