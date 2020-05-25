@@ -165,7 +165,7 @@ Person.prototype.getTable = function(cols, arr) {
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
 		closeButton.setAttribute('type','image');
-		closeButton.setAttribute('src',BASE_URL+'/close_button.png');
+		closeButton.setAttribute('src',BASE_URL+'close_button.png');
 		closeButton.onclick = function() {
 			arr.splice(i, 1);
 			thisPerson.update();
@@ -211,7 +211,7 @@ Person.prototype.getTable = function(cols, arr) {
 	var lastCell = document.createElement('TD');
 	var addButton = document.createElement('INPUT');
 	addButton.setAttribute('type','image');
-	addButton.setAttribute('src',BASE_URL+'/add_button.png');
+	addButton.setAttribute('src',BASE_URL+'add_button.png');
 	addButton.onclick = () => {
 		var entry = {};
 		cols.forEach(el => entry[el.fieldname] = encodeStr(el.title) );

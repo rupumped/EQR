@@ -63,7 +63,7 @@ if (window.location.href.includes('?')) {
 	} catch (error) {
 		document.getElementById('mainDiv').style.display = 'none';
 		document.getElementById('backup').style.display = 'block';
-		document.getElementById('goHome').onclick = () => window.location.href = BASE_URL;
+		document.getElementById('goHome').onclick = () => window.location.href = BASE_URL + FORM_NAME;
 	}
 } else {
 	person = new Person(updateForm, DEFAULT_ENCODING)
@@ -92,7 +92,7 @@ if (person) {
 			qrDiv.style.display = 'initial';
 			errorDiv.innerHTML='';
 
-			code = BASE_URL + '?' + valResult.encoding;
+			code = BASE_URL + FORM_NAME + '?' + valResult.encoding;
 			console.log(code);
 			qrcode.makeCode(code);
 
