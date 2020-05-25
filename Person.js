@@ -14,7 +14,7 @@ const TEST_TABLE_INPUT = document.getElementById('testTableInput');
 function Person(update, url) {
 	this.update = update;
 
-	url = url.substring(url.indexOf('?')+2);
+	url = url.substring(url.indexOf('?')+1);
 	// TODO: Add support for all unicode letters \p{L}. Currently, Firefox does not support this.
 	var re = new RegExp('('+REGEX.NAME+')' + '(\\d{4})(\\d{2})(\\d{2})' + '('+REGEX.BLOOD+')' + '('+REGEX.HEIGHT+')' + '('+REGEX.WEIGHT+')' + '([YN])' + '((?:'+REGEX.TEXT+'\\&)*)' + '=((?:'+REGEX.TEXT+'\\&)*)' + '=((?:(?:'+REGEX.TEXT+'\\&){4})*)' + '=((?:(?:'+REGEX.TEXT+'\\&){3})*)' + '=((?:'+REGEX.NAME+'\\d+'+REGEX.NAME+'\\&)*)=');
 	//                   Name                 DOB                          Blood Type            Height                 Weight                 Suicide    Allergies                    = Addictions                  = Medications                        = Medical Conditions                 = Emergency Contacts                       =
