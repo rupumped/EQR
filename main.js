@@ -1,4 +1,4 @@
-const DEFAULT_ENCODING = '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
+const DEFAULT_ENCODING = '?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
 
 function setFormElement(id, value, onchange) {
 	var el = document.getElementById(id);
@@ -57,7 +57,7 @@ function updateForm() {
 
 // Initialize Person from URL
 var person;
-if (window.location.href.includes('/?')) {
+if (window.location.href.includes('?')) {
 	try {
 		person = new Person(updateForm, window.location.href);
 	} catch (error) {
