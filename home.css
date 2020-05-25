@@ -15,6 +15,8 @@ header {
         padding-top: 50vh;
         float: left;
         color: #FFFFFF;
+        width: 20%;
+
     }
     header img {
         float: right;
