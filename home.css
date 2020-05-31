@@ -64,3 +64,8 @@ footer {
     clear: both;
     background-color: rgb(210,238,249);
 }
+#history p {
+    text-indent: 1em;
+    text-align: left;
+    margin: 0 5%;
+}
