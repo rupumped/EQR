@@ -247,7 +247,7 @@ footer {
 	clear: both;
 }
 
-@media only screen and (max-device-width: 1024px) {
+@media only screen and (max-width: 1024px) {
 	:root {
 		--main-font-size: 1rem;
 		--button-font-size: 0.7rem;
