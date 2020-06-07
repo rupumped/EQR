@@ -58,6 +58,9 @@ main {
 .container {
 	padding: 0 var(--lr-padding);
 }
+.icon {
+	filter: brightness(60%);
+}
 
 footer {
 	clear: both;
