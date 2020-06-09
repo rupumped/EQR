@@ -57,7 +57,12 @@ main {
 }
 .container {
 	padding: 0 var(--lr-padding);
+	display: flex;
+	align-items: center;
 }
+	.container img {
+		padding-left: 0 var(--lr-padding);
+	}
 .icon {
 	filter: brightness(60%);
 }
@@ -74,6 +79,7 @@ footer {
 #attributes {
 	margin: 0;
 	clear: both;
+	padding: 0 var(--lr-padding);
 }
 #attributes img {
 	width: 100px;
@@ -96,12 +102,17 @@ footer {
 	padding-right: 10%;
 	width: 20%;
 }
-#history p {
+.info_section p {
 	text-indent: 1em;
 	text-align: left;
 }
 
 @media only screen and (max-width: 1024px) {
+	.blue_background {
+		display: inherit;
+		align-items: inherit;
+	}
+	
 	#header_text {
 		align-content: center;
 		align-items: flex-start;
