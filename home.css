@@ -75,10 +75,10 @@ main {
 .container {
 	padding: 0 var(--lr-padding);
 	display: flex;
-	align-items: center;
 }
-	.container img {
-		padding-left: 0 var(--lr-padding);
+	.container p {
+		text-indent: 2em;
+		text-align: left;
 	}
 .icon {
 	filter: brightness(60%);
