@@ -66,14 +66,19 @@ main {
 .icon {
 	filter: brightness(60%);
 }
-.blue_background {
-	background-color: rgb(210,238,249);
+.gradient_down {
+	background-image: linear-gradient(#FFFFFF,rgb(210,238,249));
+	clear: both;
+}
+.gradient_up {
+	background-image: linear-gradient(rgb(210,238,249),#FFFFFF);
 	clear: both;
 }
 
 footer {
 	clear: both;
 	text-align: center;
+	margin-top: 10%;
 }
 
 #attributes {
