@@ -74,42 +74,37 @@ main {
 	}
 .container {
 	padding: 0 var(--lr-padding);
-	display: flex;
 }
+.subcontainer {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	width: 100%;
+	justify-content: center;
+}
+	.subcontainer div {
+		width: 50%;
+	}
+	.subcontainer p {
+		text-align: left;
+		text-indent: 2em;
+	}
+	.subcontainer img {
+		max-width: 50%;
+		max-height: 100%;
+	}
 .icon {
 	filter: brightness(60%);
+	width: 100px;
 }
 .gradient_down {
 	background-image: linear-gradient(#FFFFFF,var(--light-blue));
-	clear: both;
-	display: flex;
-	align-items: center;
+	display: block;
 }
-	.gradient_down img {
-		padding-left: 5%;
-	}
-	.gradient_down p {
-		text-indent: 2em;
-		text-align: left;
-	}
-	.gradient_down img {
-		width: 43%;
-	}
 .gradient_up {
 	background-image: linear-gradient(var(--light-blue),#FFFFFF);
-	clear: both;
-	display: flex;
+	display: block;
 }
-	.gradient_up img {
-		padding-left: 5%;
-	}
-	.gradient_up p {
-		text-indent: 2em;
-		text-align: left;
-	}
-	.gradient_up img {
-		/* How do I make the pictures dynamically change size within the window? */
-	}
 
 footer {
 	clear: both;
@@ -117,45 +112,27 @@ footer {
 	margin-top: 10%;
 }
 
-#attributes {
-	margin: 0;
-	clear: both;
-	padding: 0 var(--lr-padding);
+#reasons {
+	display: flex;
+	justify-content: space-around;
+	flex-flow: row wrap;
 }
-#attributes img {
-	width: 100px;
-}
-#reason_1 {
-	background-color: inherit;
-	float: left;
-	padding-left: 10%;
-	width: 20%;
-}
-#reason_2 {
-	background-color: inherit;
-	padding: 0 10% 0 10%;
-	float: left;
-	width: 20%;
-}
-#reason_3 {
-	background-color: inherit;
-	float: right;
-	padding-right: 10%;
-	width: 20%;
-}
-.info_section p {
-	text-indent: 1em;
-	text-align: left;
+#reasons p {
+	width: 20em;
 }
 
 @media only screen and (max-width: 1024px) {
-	.blue_background {
-		display: inherit;
-		align-items: inherit;
-	}
-	
 	#header_text {
 		align-content: center;
 		align-items: flex-start;
+	}
+}
+
+@media only screen and (max-width: 64em) {
+	:root {
+		--lr-padding: 2%;
+	}
+	.subcontainer div {
+		width: 100%;
 	}
 }
