@@ -76,21 +76,40 @@ main {
 	padding: 0 var(--lr-padding);
 	display: flex;
 }
-	.container p {
-		text-indent: 2em;
-		text-align: left;
-	}
 .icon {
 	filter: brightness(60%);
 }
 .gradient_down {
 	background-image: linear-gradient(#FFFFFF,var(--light-blue));
 	clear: both;
+	display: flex;
+	align-items: center;
 }
+	.gradient_down img {
+		padding-left: 5%;
+	}
+	.gradient_down p {
+		text-indent: 2em;
+		text-align: left;
+	}
+	.gradient_down img {
+		width: 43%;
+	}
 .gradient_up {
 	background-image: linear-gradient(var(--light-blue),#FFFFFF);
 	clear: both;
+	display: flex;
 }
+	.gradient_up img {
+		padding-left: 5%;
+	}
+	.gradient_up p {
+		text-indent: 2em;
+		text-align: left;
+	}
+	.gradient_up img {
+		/* How do I make the pictures dynamically change size within the window? */
+	}
 
 footer {
 	clear: both;
