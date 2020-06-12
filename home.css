@@ -4,7 +4,7 @@
 }
 
 body {
-	background-color: #FFFFFF;
+	background-color: var(--form-bg-color);
 	margin: 0;
 	font-family: var(--main-font-family);
 }
@@ -52,47 +52,96 @@ header {
 	box-sizing: border-box;
 }
 
-main {
-	clear: both;
-	text-align: center;
-}
 .button {
 	background-color: var(--accent-bg-color);
-	padding: 1% 5%;
+	padding: 0.5em 3em;
 	text-decoration: none;
 	font-weight: bold;
-	color: #FFFFFF;
-	border-color: #FFFFFF;
+	color: var(--accent-text-color);
+	border-color: var(--form-bg-color);
 	border-style: solid;
 	border-width: 2px;
 	border-radius: 20px;
 }
 	.button:hover {
-		color: #000000;
-		border-color: #000000;
+		color: var(--main-text-color);
+		border-color: var(--main-text-color);
 		background-color: var(--light-blue);
 	}
-.container {
-	padding: 0 var(--lr-padding);
+
+main {
+	text-align: center;
+	color: var(--main-text-color);
 }
+
+h2 {
+	margin-bottom: 0.4em;
+}
+#reasons-header h3 {
+	margin-top: 0;
+	margin-bottom: 5em;
+}
+
+#reasons {
+	display: flex;
+	justify-content: space-around;
+	flex-flow: row wrap;
+}
+#reasons h3 {
+	margin-top: 1.5em;
+	margin-bottom: 1em;
+}
+#reasons p {
+	width: 20em;
+	max-width: 100%;
+	margin-top: 0;
+}
+
+.container {
+	padding: 3cm var(--lr-padding);
+}
+
 .subcontainer {
 	display: flex;
 	flex-flow: row wrap;
 	align-items: center;
-	width: 100%;
 	justify-content: center;
+	width: 100%;
 }
-	.subcontainer div {
-		width: 50%;
+	.subcontainer h2 {
+		margin-top: 0;
+	}
+	.subcontainer .text {
+		width: 45%;
+		flex-grow: 1;
 	}
 	.subcontainer p {
 		text-align: left;
 		text-indent: 2em;
 	}
-	.subcontainer img {
-		max-width: 50%;
+
+.img-container {
+	max-width: 45%;
+	max-height: 100%;
+	vertical-align: center;
+	flex-shrink: 0;
+	display: flex;
+	justify-content: center;
+}
+	.img-container img {
+		height: auto;
+		max-width: 100%;
 		max-height: 100%;
+		margin-left: 7em;
+		border-radius: 5px;
 	}
+	#missionimg img {
+		width: 6cm;
+	}
+	#bros img {
+		width: 9cm;
+	}
+
 .icon {
 	filter: brightness(60%);
 	width: 100px;
@@ -112,15 +161,6 @@ footer {
 	margin-top: 10%;
 }
 
-#reasons {
-	display: flex;
-	justify-content: space-around;
-	flex-flow: row wrap;
-}
-#reasons p {
-	width: 20em;
-}
-
 @media only screen and (max-width: 1024px) {
 	#header_text {
 		align-content: center;
@@ -130,9 +170,25 @@ footer {
 
 @media only screen and (max-width: 64em) {
 	:root {
-		--lr-padding: 2%;
+		--lr-padding: 4%;
 	}
-	.subcontainer div {
+
+	.subcontainer .text {
 		width: 100%;
+	}
+
+	.img-container {
+		max-width: 100%;
+		width: 100%;
+		height: auto;
+	}
+	.img-container img {
+		padding-left: 0;
+	}
+	#missionimg img {
+		max-width: 100%;
+	}
+	#bros img {
+		max-width: 100%;
 	}
 }
