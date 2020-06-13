@@ -209,13 +209,14 @@ footer {
 	#button_spacer {
 		flex-grow: 1;
 	}
+	.button {
+		margin: auto;
+	}
 	header .button {
 		display: inline;
-		width: 100%;
 		margin-top: 0;
 	}
 	main .button {
-		width: 100%;
 		padding: 1em 1em;
 	}
 
@@ -239,18 +240,25 @@ footer {
 	}
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 767px) {
 	#header_text {
 		align-items: flex-start;
 	}
 	#header div {
 		display: flex;
 		flex-direction: column;
+		align-items: flex-start;
 		height: 100%
 	}
 	#header_text h2 {
 		font-size: 33px;
 		line-height: 40px;
 		margin: 0 0;
+	}
+}
+
+@media only screen and (max-width: 450px) {
+	.button {
+		width: 100%;
 	}
 }
