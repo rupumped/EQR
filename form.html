@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>EQR</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+
+	<!-- SEO Description-->
+	<meta name="description" content="The Best Medical ID There Is. EQR securely stores all of your necessary medical information for free.">
+
+	<!-- Favicon -->
+	<link rel="icon" href="https://rupumped.github.io/EQR/favicon.png" type="image/x-icon">
+
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+	</script>
+	<![endif]-->
+
+	<!-- Fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+	<link href='https://fonts.googleapis.com/css?family=Open Sans Condensed:300' rel='stylesheet'>
+
+	<!-- Copy-Paste Debugging -->
+	<!-- Web: h_ttps://rupumped.github.io/EQR/
+		 Nick Ubuntu: f_ile:///home/nick/GitHub/EQR/
+		 Nick Windows: f_ile:///C:/Users/nick/Documents/GitHub/EQR/
+		 Lucas Windows: f_ile:///C:/Users/Lucas/Documents/GitHub/EQR/
+		 -->
+	<!-- Custom CSS -->
+	<!--  -->
+	<link rel="stylesheet" type="text/css" href="https://rupumped.github.io/EQR/color_scheme.css">
+	<link rel="stylesheet" type="text/css" href="https://rupumped.github.io/EQR/form.css">
+
+	<!-- External Imports -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/KeeeX/qrcodejs/master/qrcode.min.js"></script>
+
+	<!-- Internal Imports -->
+	<script type="text/javascript">
+		const BASE_URL = 'https://rupumped.github.io/EQR/';
+		const FORM_NAME = 'form.html';
+	</script>
+	<script src="https://rupumped.github.io/EQR/myTrim.js"></script>
+	<script src="https://rupumped.github.io/EQR/pad.js"></script>
+</head>
+
+<body>
+	<div id="testem" class="test" style="height: 1em; width: 1em;"></div>
+	<span id="testSpan" class="test" style="height: 1em;"></span>
+	<table class="test"><tbody><td id="testCloseButton"><input type="image" name="testCloseButton" src="https://rupumped.github.io/EQR/add_button.png" class="close"></td></tbody></table>
+	<div id="mainPage">
+		<div id="wrapper">
+			<header id="header">
+				<h1 id="headerText">Emergency Medical Information</h1>
+				<a id="help" href="https://rupumped.github.io/EQR/">
+					<img src="https://rupumped.github.io/EQR/icon_help.png" alt="help">
+					<div>What is this form?</div>
+				</a>
+			</header>
+			<main id="subwrapper">
+				<div id="mainDiv" class="bigDiv">
+					<form id="form">
+						<label for="name">Full Name:</label>
+						<input type="text" name="name" id="name" required><br>
+						<div class="spacer"></div>
+						<label for="dob">Date of Birth:</label>
+						<input type="date" name="dob" id="dob" required><br>
+						<div class="spacer"></div>
+						<label for="blood">Blood Type:</label>
+						<input type="text" name="blood" id="blood" pattern="(A|B|AB|O)[+-]" required><br>
+						<div class="spacer"></div>
+						<label>Height:</label>
+						<input type="number" name="heightFt" id="heightFt" min="0" max="9" required>
+						<label class="unit">&nbsp;ft.&nbsp;&nbsp;</label>
+						<input type="number" name="heightIn" id="heightIn" min="0" max="11" required>
+						<label class="unit">&nbsp;in.</label><br>
+						<div class="spacer"></div>
+						<label for="weight">Weight (lbs.):</label>
+						<input type="number" name="weight" id="weight" min="0" max="9999" required><br>
+						<div class="spacer"></div>
+						<label for="suicide">Past suicide attempt(s):</label>
+						<input type="checkbox" name="suicide" id="suicide"><br>
+						<div class="spacer"></div>
+						<label for="allergies">Allergies (comma-separated):</label><br>
+						<input type="text" name="allergies" id="allergies" class="list"><br>
+						<div class="spacer"></div>
+						<label for="addictions">Addictions (comma-separated):</label><br>
+						<input type="text" name="addictions" id="addictions" class="list"><br>
+						<div class="spacer"></div>
+						<label class="tableLabel">Medications:</label><br>
+						<div id="medicationsTableWrapper" class="tableWrapper"></div>
+						<div class="spacer"></div>
+						<label class="tableLabel">Medical Conditions:</label><br>
+						<div id="conditionsTableWrapper" class="tableWrapper"></div>
+						<div class="spacer"></div>
+						<label class="tableLabel">Emergency Contacts:</label><br>
+						<div id="contactsTableWrapper" class="tableWrapper"></div>
+						<div class="spacer"></div>
+						<input type="button" name="generate" id="generate" class="bigButton" value="Generate Emergency QR Code">
+					</form>
+					<div class="spacer"></div>
+					<div id="errorDiv"></div>
+					<div id="qrcode" style="display: none;"></div>
+					<div class="spacer"></div>
+					<div id="printButtonWrapper" style="display: none;">
+						<input type="button" name="print" id="print" class="bigButton" value="Print EQR Code">
+						<div class="spacer"></div>
+						<a id="download" download="EQR.png"><input type="button" name="download" class="bigButton" value="Download EQR Code"></a>
+					</div>
+				</div>
+				<div id="backup" class="bigDiv" style="display: none;">
+					<p>Error! The URL is invalid. If you got here by scanning an EQR code, the code may be invalid. Please try again.</p>
+					<div class="spacer"></div>
+					<input type="button" name="goHome" id="goHome" class="bigButton" value="Click Here to Generate a New EQR">
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<div id="printPageWrapper" style="display: none;">
+		<input type="button" name="returnFromPrint" id="returnFromPrint" class="bigButton" value="Return to EQR Creator"><br>
+		<div class="spacer"></div>
+		<div id="walletCardV">
+			<p class="walletText" id="walletTextV">EMERGENCY MEDICAL INFORMATION<br><br>&darr; SCAN ME &darr;</p>
+		</div>
+		<div class="h-spacer"></div>
+		<div id="walletCardH">
+			<p class="walletText" id="walletTextH"></p>
+		</div>
+	</div>
+
+	<div id="downloadPageWrapper" style="display: none;">
+		<input type="button" name="returnFromDownload" id="returnFromDownload" class="bigButton" value="Return to EQR Creator"><br>
+		<div class="spacer"></div>
+		<p>To download,</p>
+		<ol>
+			<li>Right click the EQR code below,</li>
+			<li>Select "Save Image As...", and</li>
+			<li>Save it using your computer's file system.</li>
+		</ol>
+		<div class="spacer"></div>
+	</div>
+
+	<footer>
+		<p>&copy; 2020 Nicholas and Lucas Selby All Rights Reserved</p>
+	</footer>
+</body>
+
+<script src="https://rupumped.github.io/EQR/Person.js"></script>
+<script src="https://rupumped.github.io/EQR/main.js"></script>
+
+</html>

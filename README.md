@@ -10,6 +10,6 @@ People with allergies or medical conditions that affect emergency medical respon
 
 EQR solves this problem. More than 95 percent of respondents look for a medical ID during emergencies. ([American Medical ID](https://www.americanmedical-id.com/faq)) By encoding all of your medical information into a compact QR code, EQR empowers patients to communicate vital medical information to emergency responders even while unconscious. When checking a patient for ID, responders can easily scan a patient's EQR code with a smartphone and have immediate access to all relevant information. EQR codes can be placed on a single wallet card with room to spare, attached to a child's backpack, or set as a smartphone lock screen.
 
-EQR codes are 100% secure. Because all information is physically encoded into the EQR itself, we do not store ANY patient medical information on our servers. The only way to access your medical information is to scan the EQR.
+EQR codes are 100% secure. Unlike other medical records [services](https://myhealth.alberta.ca/myhealthrecords) and [apps](http://www.sos-qr.com/), EQR does not store your information on any server. Instead, EQR leverages physical layer security, encoding all of the information you enter into the EQR code itself. The only way to access your medical information is to scan the EQR.
 
 To make your own EQR code, visit https://rupumped.github.io/EQR/.

@@ -1,0 +1,264 @@
+﻿:root {
+	--lr-padding: 12%;
+	--light-blue: rgb(210,238,249);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--form-bg-color);
+	margin: 0;
+	font-family: var(--main-font-family);
+}
+
+header {
+	width: 100%;
+	height: 100vh;
+}
+#header_flex {
+	position: relative;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: flex-end;
+	background-color: var(--accent-bg-color);
+	height: 100%;
+	width: 100%;
+}
+	#road {
+		height: 100%;
+		background-image: linear-gradient(to right, var(--accent-bg-color) 0%, rgba(0,0,0,0) 100%), url("https://rupumped.github.io/EQR/cover_left.jpg");
+		background-size: auto 100%;
+	}
+		#road img {
+			height: 100%;
+			width: auto;
+			visibility: hidden;
+		}
+	#right {
+		height: 100%;
+		flex-shrink: 0;
+	}
+		#right img {
+			height: 100%;
+			width: auto;
+			max-width: 100%;
+		}
+#header_text {
+	color: var(--accent-text-color);
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	padding: var(--lr-padding) var(--lr-padding);
+}
+#header_text h2 {
+	font-family: var(--main-font-family);
+	font-size: 60px;
+	line-height: 85px;
+	font-style: normal;
+	box-sizing: border-box;
+	font-weight: normal;
+	margin: 0.5em 0;
+}
+#header_text h2 span {
+	font-weight: 700;
+}
+
+.button {
+	display: inline-block;
+	background-color: var(--accent-bg-color);
+	padding: 1.1em 4em;
+	text-decoration: none;
+	text-align: center;
+	color: var(--accent-text-color);
+	border-color: var(--form-bg-color);
+	border-style: solid;
+	border-width: 2px;
+	border-radius: var(--corner-rounding);
+	transition: 0.5s;
+}
+	.button:hover {
+		color: var(--main-text-color);
+		background-color: var(--form-bg-color);
+		border-color: var(--main-text-color);
+	}
+	header .button {
+		margin-top: 1em;
+	}
+	main .button {
+		font-size: x-large;
+		font-weight: bold;
+	}
+
+main {
+	width: 100%;
+	text-align: center;
+	color: var(--main-text-color);
+}
+
+main h2 {
+	margin-bottom: 0.4em;
+}
+#reasons-header h3 {
+	margin-top: 0;
+	margin-bottom: 5em;
+}
+
+#reasons {
+	display: flex;
+	justify-content: space-around;
+	flex-flow: row wrap;
+}
+#reasons h3 {
+	margin-top: 1.5em;
+	margin-bottom: 1em;
+}
+#reasons p {
+	width: 20em;
+	max-width: 100%;
+	margin-top: 0;
+}
+
+.container {
+	padding-right: var(--lr-padding);
+	padding-left: var(--lr-padding);
+}
+.section {
+	padding-top: 3cm;
+	padding-bottom: 3cm;
+}
+.last-section {
+	padding-bottom: var(--lr-padding);
+}
+
+.subcontainer {
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+	.subcontainer h2 {
+		margin-top: 0;
+	}
+	.subcontainer .text {
+		width: 45%;
+		flex-grow: 1;
+	}
+	.subcontainer p {
+		text-align: left;
+		text-indent: 2em;
+	}
+
+.img-container {
+	max-width: 45%;
+	max-height: 100%;
+	vertical-align: center;
+	flex-shrink: 0;
+	display: flex;
+	justify-content: center;
+}
+	.img-container img {
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
+		margin-left: 7em;
+		border-radius: 5px;
+	}
+	#missionimg img {
+		width: 6cm;
+	}
+	#bros img {
+		width: 9cm;
+	}
+
+.icon {
+	filter: brightness(60%);
+	width: 100px;
+}
+.gradient_down {
+	background-image: linear-gradient(#FFFFFF,var(--light-blue));
+	display: block;
+}
+.gradient_up {
+	background-image: linear-gradient(var(--light-blue),#FFFFFF);
+	display: block;
+}
+
+footer {
+	clear: both;
+	text-align: center;
+}
+
+@media only screen and (max-width: 64em) {
+	:root {
+		--lr-padding: 4%;
+	}
+
+	#header_text div {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+	#button_spacer {
+		flex-grow: 1;
+	}
+	.button {
+		margin: auto;
+	}
+	header .button {
+		display: inline;
+		margin-top: 0;
+	}
+	main .button {
+		padding: 1em 1em;
+	}
+
+	.subcontainer .text {
+		width: 100%;
+	}
+
+	.img-container {
+		max-width: 100%;
+		width: 100%;
+		height: auto;
+	}
+	.img-container img {
+		margin-left: 0;
+	}
+	#missionimg img {
+		max-width: 100%;
+	}
+	#bros img {
+		max-width: 100%;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	#header_text {
+		align-items: flex-start;
+	}
+	#header div {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		height: 100%
+	}
+	#header_text h2 {
+		font-size: 33px;
+		line-height: 40px;
+		margin: 0 0;
+	}
+}
+
+@media only screen and (max-width: 450px) {
+	.button {
+		width: 100%;
+	}
+}

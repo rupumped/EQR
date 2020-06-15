@@ -1,0 +1,16 @@
+:root {
+	--main-bg-color: rgb(210,238,249);
+	--accent-bg-color: rgb(23,86,187);
+	--accent-border-color: rgb(17,64,140);
+	--form-bg-color: white;
+	--main-text-color: rgb(51,51,51);
+	--accent-text-color: white;
+	--main-input-border-color: grey;
+	--close-button-bg-color: rgb(249,74,107);
+	--close-button-border-color: rgb(207,31,74);
+	--add-button-bg-color: rgb(211,211,211);
+	--add-button-border-color: rgb(151,151,151);
+	--main-font-family: 'Open Sans';
+	--accent-font-family: 'Open Sans Condensed';
+	--corner-rounding: 5px;
+}

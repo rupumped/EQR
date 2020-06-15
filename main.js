@@ -1,12 +1,4 @@
-const DEFAULT_ENCODING = '/?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
-const BASE_URL = 'https://rupumped.github.io/EQR/';
-//const BASE_URL = 'file:///C:/Users/nick/Documents/GitHub/EQR/index.html/';
-
-// Get screen DPI
-var devicePixelRatio = 1;//window.devicePixelRatio || 1;
-var dpi_x = document.getElementById('testdiv').offsetWidth * devicePixelRatio;
-var dpi_y = document.getElementById('testdiv').offsetHeight * devicePixelRatio;
-var dpi = (dpi_x+dpi_y)/2;
+const DEFAULT_ENCODING = '?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
 
 function setFormElement(id, value, onchange) {
 	var el = document.getElementById(id);
@@ -48,24 +40,30 @@ function updateForm() {
 
 
 	document.getElementById('medicationsTableWrapper').innerHTML = '';
-	document.getElementById('medicationsTableWrapper').appendChild(person.getMedsTable());
+	document.getElementById('medicationsTableWrapper').appendChild(person.getTable(
+		[ {title: 'Name', fieldname: 'name'}, {title: 'Dosage', fieldname: 'dose'}, {title: 'Frequency', fieldname: 'freq'}, {title: 'Reason', fieldname: 'reason'} ],
+		person.medications));
 
 	document.getElementById('conditionsTableWrapper').innerHTML = '';
-	document.getElementById('conditionsTableWrapper').appendChild(person.getConditionsTable());
+	document.getElementById('conditionsTableWrapper').appendChild(person.getTable(
+		[ {title: 'Name', fieldname: 'name'}, {title: 'Symptoms', fieldname: 'effect'}, {title: 'Relevance During Emergency', fieldname: 'relevance'} ],
+		person.conditions));
 
 	document.getElementById('contactsTableWrapper').innerHTML = '';
-	document.getElementById('contactsTableWrapper').appendChild(person.getContactsTable());
+	document.getElementById('contactsTableWrapper').appendChild(person.getTable(
+		[ {title: 'Name', fieldname: 'name'}, {title: 'Phone Number', fieldname: 'number'}, {title: 'Relationship', fieldname: 'relation'} ],
+		person.contacts));
 }
 
 // Initialize Person from URL
 var person;
-if (window.location.href.includes('/?')) {
+if (window.location.href.includes('?')) {
 	try {
 		person = new Person(updateForm, window.location.href);
 	} catch (error) {
 		document.getElementById('mainDiv').style.display = 'none';
 		document.getElementById('backup').style.display = 'block';
-		document.getElementById('goHome').onclick = () => window.location.href = BASE_URL;
+		document.getElementById('goHome').onclick = () => window.location.href = BASE_URL + FORM_NAME;
 	}
 } else {
 	person = new Person(updateForm, DEFAULT_ENCODING)
@@ -79,7 +77,11 @@ if (person) {
 	var qrcode = new QRCode(qrDiv);
 
 	// Add generate button to HTML
+	var wrapper = document.getElementById('wrapper');
 	var errorDiv = document.getElementById('errorDiv');
+	var printButtonWrapper = document.getElementById('printButtonWrapper');
+	var downloadPageWrapper = document.getElementById('downloadPageWrapper');
+	var walletTextH = document.getElementById('walletTextH');
 	var code;
 	document.getElementById('generate').onclick = function() {
 		errorDiv.innerHTML='';
@@ -90,14 +92,14 @@ if (person) {
 			qrDiv.style.display = 'initial';
 			errorDiv.innerHTML='';
 
-			code = BASE_URL + '?' + valResult.encoding;
+			code = BASE_URL + FORM_NAME + '?' + valResult.encoding;
 			console.log(code);
 			qrcode.makeCode(code);
 
 			// Add "Print" button
-			document.getElementById('printButtonWrapper').style.display = 'initial';
+			printButtonWrapper.style.display = 'initial';
 			document.getElementById('print').onclick = () => {
-				document.getElementById('wrapper').style.display = 'none';
+				wrapper.style.display = 'none';
 				document.getElementById('printPageWrapper').style.display = 'initial';
 				document.body.style.backgroundColor = 'white';
 
@@ -107,19 +109,20 @@ if (person) {
 
 				var qrImgH = qrDiv.children[1].cloneNode(true);
 				qrImgH.setAttribute('id','qrImgH');
-				document.getElementById('walletTextH').appendChild(qrImgH);
-				document.getElementById('walletTextH').innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
+				walletTextH.appendChild(qrImgH);
+				walletTextH.innerHTML += ' EMERGENCY MEDICAL INFORMATION<br><br>← SCAN ME'
 				window.print();
 			}
 			document.getElementById('download').onclick = () => {
-				document.getElementById('wrapper').style.display = 'none';
-				document.getElementById('downloadPageWrapper').style.display = 'initial';
+				wrapper.style.display = 'none';
+				downloadPageWrapper.style.display = 'initial';
 				document.body.style.backgroundColor = 'white';
 
 				var qrImg = qrDiv.children[1].cloneNode(true);
-				document.getElementById('downloadPageWrapper').appendChild(qrImg);
+				downloadPageWrapper.appendChild(qrImg);
 			}
 		} else {
+			printButtonWrapper.style.display = 'none';
 			qrDiv.style.display = 'none';
 			errorDiv.appendChild(document.createTextNode('Error! QR code cannot be generated:'));
 			errorDiv.appendChild(document.createElement('BR'));
@@ -137,3 +140,39 @@ if (person) {
 	document.getElementById('returnFromPrint').onclick = returnFn;
 	document.getElementById('returnFromDownload').onclick = returnFn;
 }
+
+
+function fit2page(evt) {
+	// Resize Header Font
+	var header = document.getElementById('header');
+	var headerText = document.getElementById('headerText');
+	var help = document.getElementById('help');
+	var maxHeaderTextWidth = 0.8*(header.offsetWidth - help.offsetWidth);
+	var headerFontSize = 1;
+	headerText.style.fontSize = `${headerFontSize}px`;
+	while (headerText.offsetWidth<maxHeaderTextWidth) {
+		headerText.style.fontSize = `${++headerFontSize}px`;
+	}
+	headerText.style.fontSize = `${--headerFontSize}px`;
+
+	if (person) updateForm();
+}
+
+// Cross-platform post-load script from https://stackoverflow.com/questions/807878/how-to-make-javascript-execute-after-page-load
+if(window.attachEvent) {
+    window.attachEvent('onload', fit2page);
+} else {
+    if(window.onload) {
+        var curronload = window.onload;
+        var newonload = function(evt) {
+            curronload(evt);
+            fit2page(evt);
+        };
+        window.onload = newonload;
+    } else {
+        window.onload = fit2page;
+    }
+}
+window.addEventListener('resize', fit2page);
+window.addEventListener('orientationchange', fit2page);
+screen.orientationchange = fit2page;

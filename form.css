@@ -1,0 +1,265 @@
+:root {
+	--main-font-size: 1.4rem;
+	--button-font-size: 0.7rem;
+	--close-button-column-width: 1em;
+	--textarea-padding: 0.2em;
+	--main-lr-padding: 6%;
+}
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-color: var(--main-bg-color);
+}
+.test {
+	left: -100%;
+	top: -100%;
+	position: absolute;
+}
+.test p {
+	font-family: var(--main-font-family);
+	font-size: var(--main-font-size);
+}
+#mainPage {
+	background-color: var(--main-bg-color);
+	font-family: var(--main-font-family);
+	color: var(--main-text-color);
+}
+#wrapper {
+	background-color: var(--form-bg-color);
+	width: 60%;
+	margin-left: auto ;
+	margin-right: auto ;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.bigDiv {
+	padding: var(--main-lr-padding);
+}
+
+header {
+	background-color: var(--accent-bg-color);
+	color: var(--accent-text-color);
+	font-family: var(--accent-font-family);
+	font-weight: bold;
+	padding: 2% var(--main-lr-padding);
+	white-space: nowrap;
+}
+h1 {
+	display: inline-block;
+}
+#help {
+	display: inline-block;
+	float: right;
+	padding-top: 12%;
+	width: 5%;
+}
+#help img {
+	display: block;
+	max-width: 100%;
+	max-height: 100%;
+	width: auto;
+	height: auto;
+}
+#help div {
+	display: none;
+}
+#help:hover div {
+	display: block;
+	background-color: #FFFFFF;
+	color: #000000;
+	text-decoration: none;
+	float: right;
+	padding: 10%;
+	transform: translateX(5%);
+	font-family: var(--main-font-family);
+}
+
+.spacer {
+	height: 2em;
+}
+.h-spacer {
+	height: 2em;
+	width: 2em;
+	float: left;
+}
+
+label {
+	margin-right:1em;
+	font-size: var(--main-font-size);
+}
+label.unit {
+	margin-right:0;
+}
+
+input {
+	font-size: var(--main-font-size);
+	font-family: var(--main-font-family);
+	border: 1px solid var(--main-input-border-color);
+}
+input, textarea {
+	padding: var(--textarea-padding);
+}
+input[type=date] {
+	font-family: var(--main-font-family);
+}
+input[type=checkbox] {
+	width: 1.1em;
+	height: 1.1em;
+}
+input.list {
+	width: 98%;
+}
+.bigButton {
+	background-color: var(--accent-bg-color);
+	border: 1px solid var(--accent-border-color);
+	color: white;
+	font-weight: bold;
+	padding: 0.6em 3em;
+	width: 22em;
+	max-width: 100%;
+	display: block;
+}
+
+#name {
+	width: 11em;
+}
+#blood {
+	width:3em;
+}
+#heightFt {
+	width:2em;
+}
+#heightIn {
+	width:3em;
+}
+#weight {
+	width:4em;
+}
+
+.tableLabel {
+	font-weight: bold;
+}
+.tableWrapper {
+	overflow-x:auto;
+}
+th {
+	font-size: var(--main-font-size);
+	font-weight: normal;
+}
+table input {
+	width: 100%;
+}
+table input[type=image] {
+	vertical-align: middle;
+	border-radius: 50%;
+	width: 1em;
+	height: auto;
+}
+table input.close {
+	border: 0.1em solid var(--close-button-border-color);
+	background-color: var(--close-button-bg-color);
+}
+table input.add {
+	border: 0.1em solid var(--add-button-border-color);
+	background-color: var(--add-button-bg-color);
+}
+
+p, ol {
+	font-family: var(--main-font-family);
+}
+#mainPage p, ol {
+	font-size: var(--main-font-size);
+}
+#downloadPageWrapper p, ol {
+	font-size: var(--main-font-size);
+}
+
+#printPageWrapper {
+	background-color: white;
+	color: black;
+}
+
+#qrcode {
+	width: 160px;
+	height: 160px;
+}
+img {
+	image-rendering: pixelated;
+}
+
+#printButtonWrapper {
+	text-align: center;
+}
+
+#walletCardV {			/* Wallet Card Dimensions: */
+	width: 5.198cm;		/* 5.398 cm */
+	height: 8.360cm;	/* 8.560 cm */
+	border: 1px solid black;
+	padding: 0.1cm;
+	float: left;
+}
+#walletCardH {
+	width: 8.360cm;
+	height: 5.198cm;
+	border: 1px solid black;
+	padding: 0.1cm;
+	float: left;
+}
+.walletText {
+	text-align: center;
+	font-weight: bold;
+	font-family: var(--main-font-family);
+}
+#walletTextH {
+	float: left;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+#qrImgV {
+	width: 100%;
+	height: 5cm;
+}
+#qrImgH {
+	width: 5cm;
+	height: 100%;
+	float: left;
+}
+
+footer {
+	text-align: center;
+	font-family: var(--main-font-family);
+	clear: both;
+}
+
+@media only screen and (max-width: 1024px) {
+	:root {
+		--main-font-size: 1rem;
+		--button-font-size: 0.7rem;
+	}
+	.bigButton {
+		width: 100%;
+		padding: 0.6em 2em;
+		border-radius: var(--corner-rounding);
+	}
+	.spacer {
+		height: 1em;
+	}
+	#wrapper {
+		width: 99%;
+	}
+	#help {
+		width: 8%;
+	}
+}
+
+@media print {
+	#returnFromPrint {
+		display: none;
+	}
+
+	footer {
+		padding-top: 1cm;
+	}
+}
