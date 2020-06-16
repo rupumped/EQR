@@ -195,7 +195,25 @@ footer {
 	text-align: center;
 }
 
-@media only screen and (max-width: 64em) {
+@media only screen and (max-width: 1760px) {
+	#header_text h2 {
+		font-size: 50px;
+		line-height: 71px;
+	}
+}
+@media only screen and (max-width: 1550px) {
+	#header_text h2 {
+		font-size: 40px;
+		line-height: 57px;
+	}
+}
+@media only screen and (max-width: 1350px) {
+	#header_text h2 {
+		font-size: 33px;
+		line-height: 47px;
+	}
+}
+@media only screen and (max-width: 1200px) {
 	:root {
 		--lr-padding: 4%;
 	}
@@ -251,8 +269,6 @@ footer {
 		height: 100%
 	}
 	#header_text h2 {
-		font-size: 33px;
-		line-height: 40px;
 		margin: 0 0;
 	}
 }
