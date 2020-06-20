@@ -61,19 +61,22 @@ h1 {
 	width: auto;
 	height: auto;
 }
-#help div {
-	display: none;
-}
-#help:hover div {
-	display: block;
-	background-color: #FFFFFF;
-	color: #000000;
-	text-decoration: none;
-	float: right;
-	padding: 10%;
-	transform: translateX(5%);
-	font-family: var(--main-font-family);
-}
+	#help div {
+		opacity: 0;
+		border-radius: 10px;
+		border: 2px solid #000000;
+	}
+	#help:hover div {
+		transition: 1s;
+		background-color: #FFFFFF;
+		color: #000000;
+		text-decoration: none;
+		float: right;
+		padding: 10%;
+		transform: translateX(5%);
+		font-family: var(--main-font-family);
+		opacity: 1;
+	}
 
 .spacer {
 	height: 2em;
