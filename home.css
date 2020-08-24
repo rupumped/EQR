@@ -136,6 +136,14 @@ main h2 {
 	padding-bottom: var(--lr-padding);
 }
 
+.gradient_down {
+	background-image: linear-gradient(#FFFFFF,var(--light-blue));
+	display: block;
+}
+.gradient_up {
+	background-image: linear-gradient(var(--light-blue),#FFFFFF);
+	display: block;
+}
 .subcontainer {
 	display: flex;
 	flex-flow: row wrap;
@@ -154,11 +162,15 @@ main h2 {
 		text-align: left;
 		text-indent: 2em;
 	}
+#how_to img {
+	max-width: 45%;
+	max-height: 100%;
+	border: 2px solid #000000;
+}
 
 .img-container {
 	max-width: 45%;
 	max-height: 100%;
-	vertical-align: center;
 	flex-shrink: 0;
 	display: flex;
 	justify-content: center;
@@ -180,14 +192,6 @@ main h2 {
 .icon {
 	filter: brightness(60%);
 	width: 100px;
-}
-.gradient_down {
-	background-image: linear-gradient(#FFFFFF,var(--light-blue));
-	display: block;
-}
-.gradient_up {
-	background-image: linear-gradient(var(--light-blue),#FFFFFF);
-	display: block;
 }
 
 footer {
