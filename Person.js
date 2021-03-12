@@ -50,7 +50,8 @@ function Person(update, url) {
 			name: medData[0].substring(0,medData[0].length-1),
 			dose: medData[1].substring(0,medData[1].length-1),
 			freq: medData[2].substring(0,medData[2].length-1),
-			reason: medData[3].substring(0,medData[3].length-1)
+			reason: medData[3].substring(0,medData[3].length-1),
+			hasBeenClicked: (new Array(4)).fill(false)
 		});
 	});
 
@@ -61,7 +62,8 @@ function Person(update, url) {
 		this.conditions.push({
 			name: medData[0].substring(0,medData[0].length-1),
 			effect: medData[1].substring(0,medData[1].length-1),
-			relevance: medData[2].substring(0,medData[2].length-1)
+			relevance: medData[2].substring(0,medData[2].length-1),
+			hasBeenClicked: (new Array(4)).fill(false)
 		});
 	});
 
@@ -72,7 +74,8 @@ function Person(update, url) {
 		this.contacts.push({
 			name: nameAndRelation[0],
 			number: element.match(/\d+/g)[0],
-			relation: nameAndRelation[1]
+			relation: nameAndRelation[1],
+			hasBeenClicked: (new Array(4)).fill(false)
 		});
 	});
 }
@@ -199,6 +202,13 @@ Person.prototype.getTable = function(cols, arr) {
 					updateColumnWidths(medsTable);
 				}
 			}
+			iic[i][c].input.onclick = () => {
+				if (!arr[i].hasBeenClicked[c]) {
+					arr[i].hasBeenClicked[c] = true;
+					iic[i][c].input.setAttribute('placeholder', iic[i][c].input.value);
+					iic[i][c].input.value = '';
+				}
+			}
 			iic[i][c].input.required = true;
 			tr.appendChild(iic[i][c].cell);
 		}
@@ -215,6 +225,7 @@ Person.prototype.getTable = function(cols, arr) {
 	addButton.onclick = () => {
 		var entry = {};
 		cols.forEach(el => entry[el.fieldname] = encodeStr(el.title) );
+		entry.hasBeenClicked = (new Array(cols.length)).fill(false);
 		arr.push(entry);
 		thisPerson.update();
 	}

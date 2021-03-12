@@ -72,6 +72,19 @@ if (window.location.href.includes('?')) {
 if (person) {
 	updateForm();
 
+	// Initialize all fields to clear when clicked for the first time
+	['name', 'dob', 'blood', 'heightFt', 'heightIn', 'weight', 'allergies', 'addictions'].forEach(id => {
+		var el = document.getElementById(id);
+		el.hasBeenClicked = false;
+		el.onclick = () => {
+			if (!el.hasBeenClicked) {
+				el.hasBeenClicked = true;
+				el.setAttribute('placeholder', el.value);
+				el.value = '';
+			}
+		}
+	});
+
 	// Set up QR code
 	var qrDiv = document.getElementById('qrcode');
 	var qrcode = new QRCode(qrDiv);
