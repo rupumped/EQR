@@ -1,13 +1,29 @@
 const DEFAULT_ENCODING = '?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
 
+/**
+ * Assigns HTML element with specified value and onchange event handler.
+ *
+ * Used by updateForm to edit elements.
+ *
+ * @param  {String} id        ID of HTML element to set.
+ * @param  {String} value     Value to assign to element.
+ * @param  {Object} onchange  Function triggered on change event.
+ */
 function setFormElement(id, value, onchange) {
 	var el = document.getElementById(id);
 	el.setAttribute('value',value);
 	el.onchange = onchange;
 }
 
-// Fill in input fields to HTML
-function updateForm() {
+/**
+ * Fill in input fields to HTML.
+ *
+ * Returns a table cell with a text input box inside of it. Used by getTable.
+ *
+ * @param  {String} value  Value to put in the HTML input element.
+ * @return {Object}        Object with two attributes: td, the table cell, and input, the input element contained in the td.
+ */
+ function updateForm() {
 	setFormElement('name', decodeStr(person.name), () => person.name = encodeStr(document.getElementById('name').value));
 	setFormElement('dob', `${person.DOB.yr}-${person.DOB.mo}-${person.DOB.da}`, () => {
 		var dobArr = document.getElementById('dob').value.split('-');
@@ -55,9 +71,11 @@ function updateForm() {
 		person.contacts));
 }
 
-// Initialize Person from URL
+// Initialize Person from URL.
 var person;
+// If the URL contains an encoding
 if (window.location.href.includes('?')) {
+	// Try to construct a Person using it, and display error if it fails.
 	try {
 		person = new Person(updateForm, window.location.href);
 	} catch (error) {
@@ -65,10 +83,12 @@ if (window.location.href.includes('?')) {
 		document.getElementById('backup').style.display = 'block';
 		document.getElementById('goHome').onclick = () => window.location.href = BASE_URL + FORM_NAME;
 	}
+// If the URL does not contain an encoding, use default encoding.
 } else {
 	person = new Person(updateForm, DEFAULT_ENCODING)
 }
 
+// As long as there wasn't an error constructing the Person
 if (person) {
 	updateForm();
 
@@ -154,7 +174,13 @@ if (person) {
 	document.getElementById('returnFromDownload').onclick = returnFn;
 }
 
-
+/**
+ * Fit the header text, "Emergency Medical Information," to span the whole page.
+ *
+ * Resizes the form title text to barely fill the width of the form.
+ *
+ * @param  {Object} evt  Event object. This is unused, but required for fit2page to be assigned to the onload event.
+ */
 function fit2page(evt) {
 	// Resize Header Font
 	var header = document.getElementById('header');
