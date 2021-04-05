@@ -9,8 +9,17 @@ const NAME_ERROR_MSG = ' must only contain English letters, spaces, periods, and
 const TEXT_ERROR_MSG = ' must only contain English letters, numbers, spaces, periods, and hyphens. It cannot be left blank. At this time, we cannot encode other special characters.';
 const TESTSPAN = document.getElementById('testSpan');
 const EM_SIZE = document.getElementById('testem').offsetWidth;
-const TEST_TABLE_INPUT = document.getElementById('testTableInput');
 
+/**
+ * Constructor for Person object.
+ *
+ * The URL is encoded as follows, without chevrons: <Name><DOB><Blood Type><Height><Weight><Suicide><Allergies>=<Addictions>=<Medications>=<Medical Conditions>=<Emergency Contacts>=
+ * Spaces are replaced by underscores. Ampersands are used as commas and to separate columns.
+ *
+ * @param  {Object}  update  Function called to update the HTML from this object.
+ * @param  {String}  url     The encoded URL from which to extract the Person's information.
+ * @return {Object}          Person object with properties drawn from URL.
+ */
 function Person(update, url) {
 	this.update = update;
 
@@ -50,7 +59,8 @@ function Person(update, url) {
 			name: medData[0].substring(0,medData[0].length-1),
 			dose: medData[1].substring(0,medData[1].length-1),
 			freq: medData[2].substring(0,medData[2].length-1),
-			reason: medData[3].substring(0,medData[3].length-1)
+			reason: medData[3].substring(0,medData[3].length-1),
+			hasBeenClicked: (new Array(4)).fill(false)
 		});
 	});
 
@@ -61,7 +71,8 @@ function Person(update, url) {
 		this.conditions.push({
 			name: medData[0].substring(0,medData[0].length-1),
 			effect: medData[1].substring(0,medData[1].length-1),
-			relevance: medData[2].substring(0,medData[2].length-1)
+			relevance: medData[2].substring(0,medData[2].length-1),
+			hasBeenClicked: (new Array(4)).fill(false)
 		});
 	});
 
@@ -72,11 +83,19 @@ function Person(update, url) {
 		this.contacts.push({
 			name: nameAndRelation[0],
 			number: element.match(/\d+/g)[0],
-			relation: nameAndRelation[1]
+			relation: nameAndRelation[1],
+			hasBeenClicked: (new Array(4)).fill(false)
 		});
 	});
 }
 
+/**
+ * URL encoding of the Person object.
+ *
+ * See the constructor for how encoding works.
+ *
+ * @return {String}  URL encoding
+ */
 Person.prototype.encode = function() {
 	var str = `${this.name}${this.DOB.yr}${this.DOB.mo}${this.DOB.da}${this.blood}${this.height.ft}${pad(this.height.in,2)}${pad(this.weight,4)}`;
 	str+= this.suicide ? 'Y' : 'N';
@@ -93,11 +112,30 @@ Person.prototype.encode = function() {
 	return str;
 }
 
+/**
+ * Get the width of a line of text in pixels.
+ *
+ * In updateColumnWidths, it is useful to know how much space a string will take on a page. This function computes that.
+ * Note: The returned value is padded by the length of 1 em. For more information, visit https://www.w3.org/Style/Examples/007/units.en.html.
+ *
+ * @param  {String}  str  String of which to compute the width.
+ * @return {Number}       Length of input string padded by 1em.
+ */
 function getTextWidth(str) {
 	TESTSPAN.innerHTML = `<p>${str}</p>`;
 	return TESTSPAN.offsetWidth+EM_SIZE;
 }
 
+
+/**
+ * Resize the columns of a table to fill the screen and fit their contents.
+ *
+ * Resized the columns of an input table to accomplish two goals:
+ * 1) Fill the width of the screen.
+ * 2) Try to evenly allocate column width according to need.
+ *
+ * @param  {Object}  table  HTML table element to resize.
+ */
 function updateColumnWidths(table) {
 	var tbody = table.children[0];
 	var hr = tbody.children[0];
@@ -140,12 +178,12 @@ function updateColumnWidths(table) {
  * @return {Object}        HTML table element.
  */
 Person.prototype.getTable = function(cols, arr) {
-	// Initialize table and body
+	// Initialize table and body.
 	var thisPerson = this;
 	var medsTable = document.createElement('TABLE');
 	var medsTbody = document.createElement('TBODY');
 	
-	// Create header row
+	// Create header row.
 	var headerTR = document.createElement('TR');
 	var td_0_0 = document.createElement('TH');
 	headerTR.appendChild(td_0_0);
@@ -156,12 +194,12 @@ Person.prototype.getTable = function(cols, arr) {
 	}
 	medsTbody.appendChild(headerTR);
 
-	// Make a new row for each medication
+	// Make a new row for each medication.
 	var iic = new Array(arr.length);
 	for (let i=0; i<arr.length; i++) {
 		var tr = document.createElement('TR');
 
-		// Add close button in first column to allow user to remove entry
+		// Add close button in first column to allow user to remove entry.
 		var td_0 = document.createElement('TD');
 		var closeButton = document.createElement('INPUT');
 		closeButton.setAttribute('type','image');
@@ -178,6 +216,7 @@ Person.prototype.getTable = function(cols, arr) {
 
 		// Add attributes of each entry
 		for (let c=0; c<cols.length; c++) {
+			// If it's a phone number, format it as such.
 			if (cols[c].title === 'Phone Number') {
 				var thisNumber = arr[i][cols[c].fieldname];
 				if (thisNumber.length===10) {
@@ -192,6 +231,7 @@ Person.prototype.getTable = function(cols, arr) {
 						updateColumnWidths(medsTable);
 					}
 				}
+			// If it's not a phone number, encode it like a standard String.
 			} else {
 				iic[i].push(getInputInCell(decodeStr(arr[i][cols[c].fieldname])));
 				iic[i][c].input.oninput = () => {
@@ -199,6 +239,16 @@ Person.prototype.getTable = function(cols, arr) {
 					updateColumnWidths(medsTable);
 				}
 			}
+
+			// The first time the field is clicked, clear it.
+			iic[i][c].input.onclick = () => {
+				if (!arr[i].hasBeenClicked[c]) {
+					arr[i].hasBeenClicked[c] = true;
+					iic[i][c].input.setAttribute('placeholder', iic[i][c].input.value);
+					iic[i][c].input.value = '';
+				}
+			}
+
 			iic[i][c].input.required = true;
 			tr.appendChild(iic[i][c].cell);
 		}
@@ -206,6 +256,7 @@ Person.prototype.getTable = function(cols, arr) {
 		medsTbody.appendChild(tr);
 	}
 
+	// Add "add" button to last row to allow user to add entry.
 	var lastRow = document.createElement('TR');
 	lastRow.appendChild(document.createElement('TD'));
 	var lastCell = document.createElement('TD');
@@ -215,6 +266,7 @@ Person.prototype.getTable = function(cols, arr) {
 	addButton.onclick = () => {
 		var entry = {};
 		cols.forEach(el => entry[el.fieldname] = encodeStr(el.title) );
+		entry.hasBeenClicked = (new Array(cols.length)).fill(false);
 		arr.push(entry);
 		thisPerson.update();
 	}
@@ -229,6 +281,27 @@ Person.prototype.getTable = function(cols, arr) {
 	return medsTable;
 }
 
+/**
+ * Checks all properties of Person object and returns result.
+ *
+ * Checks each property of Person object against a set of hardcoded rules:
+ * 1) Name must only consist of letters (A-Z and a-z), underscores, periods, and hyphens.
+ * 2) Blood type must be one of O, A, B, or AB with a + or - after.
+ * 3) Height must be a three digit natural number.
+ * 4) Weight must be a four digit natural number.
+ * 5) With the exception of the phone numbers of emergency contacts, all other fields must be only letters, numerals, periods, and hyphens.
+ * 6) Emergency contact phone numbers must be only numerals.
+ * Failure to satisfy any of these rules results in a fail, and the reason is recorded.
+ * After checking those rules, the function tries to regenerate a new Person object using the encoding, then separately encodes the new Person. If the encodings don't match, an unknown error is recorded.
+ * If a new Person can't be encoded, an unknown error is recorded.
+ *
+ * The returned object has three attributes:
+ * - result: true or false, indicating validation success or failure, respectively.
+ * - errors: a String[] of error messages.
+ * - encoding: the encoding of the Person for the URL.
+ *
+ * @return {Object}  Result, errors, and encoding. 
+ */
 Person.prototype.validate = function() {
 	var result = true;
 	var errors = [];
@@ -362,6 +435,14 @@ Person.prototype.validate = function() {
 	return {result: result, errors: errors, encoding: encoding};
 }
 
+/**
+ * Generates an HTML td element containing an HTML input element.
+ *
+ * Returns a table cell with a text input box inside of it. Used by getTable.
+ *
+ * @param  {String} value  Value to put in the HTML input element.
+ * @return {Object}        Object with two attributes: td, the table cell, and input, the input element contained in the td.
+ */
 function getInputInCell(value) {
 	var td = document.createElement('TD');
 	var input = document.createElement('INPUT');
@@ -371,10 +452,25 @@ function getInputInCell(value) {
 	return {cell: td, input: input};
 }
 
+/**
+ * Decodes encoded string.
+ *
+ * Trims whitespace and underscores from string edges, then replaces all instances of underscores with spaces.
+ *
+ * @param  {String} str  Encoded string.
+ * @return {String}      Decoded string.
+ */
 function decodeStr(str) {
 	return myTrim(str,'[\\s_,]').split('_').join(' ');
 }
-
+/**
+ * Encodes string for URL.
+ *
+ * Trims whitespace and underscores from string edges, then replaces all instances of spaces with underscores.
+ *
+ * @param  {String} str  Decoded string.
+ * @return {String}      Encoded string.
+ */
 function encodeStr(str) {
 	return myTrim(str,'[\\s_,]').split(' ').join('_');
 }
