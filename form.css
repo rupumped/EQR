@@ -264,5 +264,6 @@ footer {
 
 	footer {
 		padding-top: 1cm;
+		display: none;
 	}
 }
