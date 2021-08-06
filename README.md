@@ -1,7 +1,4 @@
 # EQR
-Emergency medical information encoded into a QR code.
-
-## About
 It's important to keep certain medical information readily available in case of emergencies.
 
 The worst-case scenario of an emergency ambulance response is that the crew knows nothing about the patient. If the patient is unresponsive, emergency responders can only try their best to treat life-threatening signs and symptoms. In an emergency, information can make the difference between life and death.
