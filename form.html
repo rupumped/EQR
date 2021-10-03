@@ -4,13 +4,14 @@
 	<title>EQR</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+    <META NAME="Handheld-Friendly" content="True">
 
 	<!-- SEO Description-->
 	<meta name="description" content="The Best Medical ID There Is. EQR securely stores all of your necessary medical information for free.">
+    <link rel="canonical" href="https://rupumped.github.io/EQR/form.html">
 
 	<!-- Favicon -->
-	<link rel="icon" href="https://rupumped.github.io/EQR/favicon.png" type="image/x-icon">
+	<link rel="icon" href="favicon.png" type="image/x-icon">
 
 	<!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
@@ -18,43 +19,46 @@
 	<![endif]-->
 
 	<!-- Fonts -->
-	<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
-	<link href='https://fonts.googleapis.com/css?family=Open Sans Condensed:300' rel='stylesheet'>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Open+Sans+Condensed:wght@300&display=swap" rel="stylesheet">
 
-	<!-- Copy-Paste Debugging -->
-	<!-- Web: h_ttps://rupumped.github.io/EQR/
-		 Nick Ubuntu: f_ile:///home/nick/GitHub/EQR/
-		 Nick Windows: f_ile:///C:/Users/nick/Documents/GitHub/EQR/
-		 Lucas Windows: f_ile:///C:/Users/Lucas/Documents/GitHub/EQR/
-		 -->
 	<!-- Custom CSS -->
 	<!--  -->
-	<link rel="stylesheet" type="text/css" href="https://rupumped.github.io/EQR/color_scheme.css">
-	<link rel="stylesheet" type="text/css" href="https://rupumped.github.io/EQR/form.css">
+	<link rel="stylesheet" type="text/css" href="color_scheme.css">
+	<link rel="stylesheet" type="text/css" href="form.css">
 
 	<!-- External Imports -->
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdn.rawgit.com/KeeeX/qrcodejs/master/qrcode.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://cdn.rawgit.com/KeeeX/qrcodejs/master/qrcode.min.js"></script>
 	<script src="https://rupumped.github.io/NicksAPPS/JavaScript/myTrim.js"></script>
 
 	<!-- Internal Imports -->
-	<script type="text/javascript">
+	<script>
 		const BASE_URL = 'https://rupumped.github.io/EQR/';
 		const FORM_NAME = 'form.html';
 	</script>
-	<script src="https://rupumped.github.io/EQR/pad.js"></script>
+	<script src="pad.js"></script>
 </head>
 
 <body>
 	<div id="testem" class="test" style="height: 1em; width: 1em;"></div>
 	<span id="testSpan" class="test" style="height: 1em;"></span>
-	<table class="test"><tbody><td id="testCloseButton"><input type="image" name="testCloseButton" src="https://rupumped.github.io/EQR/add_button.png" class="close"></td></tbody></table>
+	<table class="test">
+		<tbody>
+			<tr>
+				<td id="testCloseButton">
+					<input type="image" name="testCloseButton" src="add_button.png" class="close" alt="close button">
+				</td>
+			</tr>
+		</tbody>
+	</table>
 	<div id="mainPage">
 		<div id="wrapper">
 			<header id="header">
 				<h1 id="headerText">Emergency Medical Information</h1>
-				<a id="help" href="https://rupumped.github.io/EQR/">
-					<img src="https://rupumped.github.io/EQR/icon_help.png" alt="help">
+				<a id="help" href="index.html">
+					<img src="icon_help.png" alt="help">
 					<div>Fill in your information, then print or download the QR code for emergencies.</div>
 				</a>
 			</header>
@@ -106,7 +110,7 @@
 					<div id="printButtonWrapper" style="display: none;">
 						<input type="button" name="print" id="print" class="bigButton" value="Print EQR Code">
 						<div class="spacer"></div>
-						<a id="download" download="EQR.png"><input type="button" name="download" class="bigButton" value="Download EQR Code"></a>
+						<a id="download" href="EQR.png" download class="bigButton">Download EQR Code</a>
 					</div>
 				</div>
 				<div id="backup" class="bigDiv" style="display: none;">
@@ -145,9 +149,9 @@
 	<footer>
 		<p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</p>
 	</footer>
-</body>
 
-<script src="https://rupumped.github.io/EQR/Person.js"></script>
-<script src="https://rupumped.github.io/EQR/main.js"></script>
+	<script src="Person.js"></script>
+	<script src="main.js"></script>
+</body>
 
 </html>

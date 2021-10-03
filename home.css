@@ -128,6 +128,10 @@ main h2 {
 	padding-right: var(--lr-padding);
 	padding-left: var(--lr-padding);
 }
+.container .button {
+	margin-left: 1em;
+	margin-right: 1em;
+}
 .section {
 	padding-top: 3cm;
 	padding-bottom: 3cm;
@@ -280,5 +284,10 @@ footer {
 @media only screen and (max-width: 450px) {
 	.button {
 		width: 100%;
+	}
+
+	.container .button {
+		margin-left: 0;
+		margin-right: 0;
 	}
 }
