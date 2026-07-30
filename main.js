@@ -1,4 +1,4 @@
-const DEFAULT_ENCODING = '?Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
+const DEFAULT_ENCODING = '#Taylor_Doe19830317A+6020180Namoxicillin&ampicillin&bees&=gambling&=acetaminophen&500mg&weekly&pain&insulin&1_unit&before_meals&diabetes&=diabetes&affects_blood_sugar&I_may_be_in_ketoacidosis&=Ann6025551234partner&Lucas4805551234sibling&=';
 
 /**
  * Assigns HTML element with specified value and onchange event handler.
@@ -74,7 +74,7 @@ function setFormElement(id, value, onchange) {
 // Initialize Person from URL.
 var person;
 // If the URL contains an encoding
-if (window.location.href.includes('?')) {
+if (window.location.href.includes('?') || window.location.href.includes('#')) {
 	// Try to construct a Person using it, and display error if it fails.
 	try {
 		person = new Person(updateForm, window.location.href);
@@ -125,7 +125,7 @@ if (person) {
 			qrDiv.style.display = 'initial';
 			errorDiv.innerHTML='';
 
-			code = BASE_URL + FORM_NAME + '?' + valResult.encoding;
+			code = BASE_URL + FORM_NAME + '#' + valResult.encoding;
 			console.log(code);
 			qrcode.makeCode(code);
 

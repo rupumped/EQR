@@ -1,6 +1,6 @@
 const REGEX = {
 	NAME: '[A-Za-z_\\.\\-]+',
-	BLOOD: '(?:A|B|AB|O)[+-]',
+	BLOOD: '(?:A|B|AB|O)[\+\-]',
 	HEIGHT: '\\d{3}',
 	WEIGHT: '\\d{4}',
 	TEXT: '[\\w\\.\\-]+'
@@ -23,7 +23,7 @@ const EM_SIZE = document.getElementById('testem').offsetWidth;
 function Person(update, url) {
 	this.update = update;
 
-	url = url.substring(url.indexOf('?')+1);
+	url = url.substring((url.includes('#') ? url.indexOf('#') : url.indexOf('?'))+1);
 	// TODO: Add support for all unicode letters \p{L}. Currently, Firefox does not support this.
 	var re = new RegExp('('+REGEX.NAME+')' + '(\\d{4})(\\d{2})(\\d{2})' + '('+REGEX.BLOOD+')' + '('+REGEX.HEIGHT+')' + '('+REGEX.WEIGHT+')' + '([YN])' + '((?:'+REGEX.TEXT+'\\&)*)' + '=((?:'+REGEX.TEXT+'\\&)*)' + '=((?:(?:'+REGEX.TEXT+'\\&){4})*)' + '=((?:(?:'+REGEX.TEXT+'\\&){3})*)' + '=((?:'+REGEX.NAME+'\\d+'+REGEX.NAME+'\\&)*)=');
 	//                   Name                 DOB                          Blood Type            Height                 Weight                 Suicide    Allergies                    = Addictions                  = Medications                        = Medical Conditions                 = Emergency Contacts                       =
@@ -419,7 +419,7 @@ Person.prototype.validate = function() {
 	if (result) {
 		try {
 			encoding = person.encode();
-			var newPerson = new Person(this.update, '?'+encoding);
+			var newPerson = new Person(this.update, '#'+encoding);
 			var newEncoding = newPerson.encode();
 			if (encoding !== newEncoding) {
 				result = false;
